@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/connect/connect",
+    "pages/loading/loading",
+    "pages/test/test",
+    "pages/device/device"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "FUGUANG-MUG",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F7F7F7"
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap24.json"
+}

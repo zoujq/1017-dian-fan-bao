@@ -3,7 +3,8 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationStyle":"custom"
+				   "navigationBarTitleText": "火天物联"
+				   // "navigationStyle":"custom"
 			}
 		}	   
         ,{
@@ -15,6 +16,16 @@
             "style" : {"navigationStyle":"custom"}
         }
 	
+        ,{
+            "path" : "pages/test/test",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/device/device",
+            "style" : {
+				"navigationBarTitleText": "火天物联"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -1,7 +1,7 @@
 {
-    "name" : "FUGUANG_2ARA_V1.0.1",
+    "name" : "火天物联",
     "appid" : "__UNI__B40E779",
-    "description" : "",
+    "description" : "智能物联",
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
@@ -57,7 +57,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "",
+        "appid" : "wxb0eded63df8e4326",
         "setting" : {
             "urlCheck" : false
         },
@@ -80,6 +80,6 @@
             "base" : "./",
             "mode" : "hash"
         },
-        "title" : "FUGANG-MUG"
+        "title" : "火天物联"
     }
 }

@@ -1,0 +1,29 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*每个页面公共css */
+page{
+	background-color: #F7F7F7;
+}
+@media (prefers-color-scheme: dark) {
+page{
+		background-color: #000000;
+}
+}
+
+

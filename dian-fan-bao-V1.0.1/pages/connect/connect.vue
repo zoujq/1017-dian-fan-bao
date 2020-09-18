@@ -24,20 +24,20 @@
 
 <script>
 	import lan_data from "../../static/language/language.js";
-	import VConsole from "../../static/vconsole.min.js"
+	//import VConsole from "../../static/vconsole.min.js"
 	import ble from '../../ble/ble.js';  
 	
 	
 	export default {
 		data() {
 			return {
-				lan:navigator.language=='zh-cn' ? lan_data.cn : lan_data.en,
+				// lan:navigator.language=='zh-cn' ? lan_data.cn : lan_data.en,
 				regist_state:0,
 				counter:0
 			}
 		},
 		onLoad(){
-			new VConsole();
+			//new VConsole();
 			ble.start_regist();
 			start_regist();
 			setTimeout(this.loop,300,'')

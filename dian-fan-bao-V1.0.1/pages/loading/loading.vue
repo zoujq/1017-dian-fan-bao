@@ -1,4 +1,4 @@
-<template>
+<template >
 	<view id="loading3">
 		<view class="demo3"></view>
 		<view class="demo3"></view>

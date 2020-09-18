@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "火天物联",
+  "usingComponents": {
+    "loading": "/pages/loading/loading"
+  }
+}

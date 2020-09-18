@@ -1,3 +1,4 @@
+// #ifdef H5
 var ble_state=0;//0-未连接  1-连接中  2-已连接
 var bang_ding_state=0;
 var os='';
@@ -283,3 +284,4 @@ export default {
 	cup_set_temp,
 	get_cup_state
 }
+ // #endif
