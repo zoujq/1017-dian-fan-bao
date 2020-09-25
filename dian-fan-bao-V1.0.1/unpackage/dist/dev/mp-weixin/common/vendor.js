@@ -1728,6 +1728,282 @@ function normalizeComponent (
 
 /***/ }),
 
+/***/ 17:
+/*!*******************************************************************************!*\
+  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/wx_ble.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+var _wx_login = _interopRequireDefault(__webpack_require__(/*! ./wx_login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _default =
+
+{
+  start_ble: start_ble,
+  stop_ble: stop_ble,
+  get_ble_state: get_ble_state,
+  cup_set_temp: cup_set_temp,
+  get_cup_state: get_cup_state,
+  start_scan_ble: start_scan_ble,
+  get_scan_device_list: get_scan_device_list,
+  bind_device: bind_device,
+  clear_scaned_device: clear_scaned_device };exports.default = _default;
+
+var scan_device_list = {};
+var scan_device_arr = [];
+var user_info = '';
+var binded_device_arr = [];
+function start_ble() {
+
+}
+function stop_ble() {
+
+}
+function get_ble_state() {
+
+}
+function cup_set_temp() {
+
+}
+function get_cup_state() {
+
+}
+
+function start_scan_ble()
+{
+  wx.openBluetoothAdapter({
+    success: function success(res) {
+      console.log(res);
+      wx.startBluetoothDevicesDiscovery({
+        success: function success(res) {
+          console.log(res);
+        } });
+
+    } });
+
+  console.log('start_scan_ble');
+
+  wx.onBluetoothDeviceFound(function (res) {
+    var devices = res.devices;
+    var d_hex = ab2hex(devices[0].advertisData);
+
+    if (d_hex.slice(0, 4) == 'c8c8')
+    {
+      if (scan_device_list[d_hex] == null)
+      {
+        add_to_scan_device_list(d_hex);
+      }
+
+    }
+  });
+
+}
+function add_to_scan_device_list(d_hex)
+{
+  user_info = _wx_login.default.get_user_info();
+
+  wx.request({
+    url: 'https://server.huotiantech.com/device/get_product_info.php',
+    data: {
+      p_id: hex2int(d_hex.slice(4, 8)),
+      htu_id: user_info.htu_id,
+      ht_token: user_info.ht_token },
+
+    success: function success(res) {
+      console.log(res);
+      scan_device_list[d_hex] = 1;
+      scan_device_arr.push({ htd_id: d_hex.slice(8), p_name: res.data.p_name, p_icon: res.data.p_icon });
+    } });
+
+}
+function get_scan_device_list()
+{
+  return scan_device_arr;
+}
+
+// ArrayBuffer转16进度字符串示例
+function ab2hex(buffer) {
+  var hexArr = Array.prototype.map.call(
+  new Uint8Array(buffer),
+  function (bit) {
+    return ('00' + bit.toString(16)).slice(-2);
+  });
+
+  return hexArr.join('');
+}
+function hex2int(hex) {
+  var len = hex.length,a = new Array(len),code;
+  for (var i = 0; i < len; i++) {
+    code = hex.charCodeAt(i);
+    if (48 <= code && code < 58) {
+      code -= 48;
+    } else {
+      code = (code & 0xdf) - 65 + 10;
+    }
+    a[i] = code;
+  }
+
+  return a.reduce(function (acc, c) {
+    acc = 16 * acc + c;
+    return acc;
+  }, 0);
+}
+function bind_device(htd_id) {
+  wx.request({
+    url: 'http://server.huotiantech.com/device/bind_device.php',
+    data: {
+      htd_id: htd_id,
+      htu_id: user_info.htu_id,
+      ht_token: user_info.ht_token },
+
+    success: function success(res) {
+      console.log(res);
+    } });
+
+}
+function get_bind_device() {
+  wx.request({
+    url: 'http://server.huotiantech.com/device/get_binded_device.php',
+    data: {
+      htu_id: user_info.htu_id,
+      ht_token: user_info.ht_token },
+
+    success: function success(res) {
+      binded_device_arr = res.data.list;
+      console.log(binded_device_arr);
+    } });
+
+}
+function clear_scaned_device() {
+  scan_device_list = {};
+  scan_device_arr = [];
+}
+
+/***/ }),
+
+/***/ 18:
+/*!*********************************************************************************!*\
+  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/wx_login.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default =
+{
+  wx_login: wx_login,
+  user_regist: user_regist,
+  check_login: check_login,
+  get_user_info: get_user_info };exports.default = _default;
+
+
+var user_info = { called: 0, registed: 0, session_key: '', openid: '', htu_id: 0, ht_token: 0 };
+function get_user_info() {
+  return user_info;
+}
+function check_login() {
+  if (user_info.called == 0)
+  {
+    return -1;
+  }
+  if (user_info.htu_id == 0)
+  {
+    return 0;
+  }
+  return 1;
+}
+function wx_login() {
+  wx.login({
+    success: function success(res) {
+      console.log(res);
+      if (res.code) {
+        //发起网络请求
+        wx.request({
+          url: 'https://server.huotiantech.com/auth/exchange_access_token.php',
+          data: {
+            js_code: res.code },
+
+          success: function success(res) {
+            //console.log(res)
+            user_info.called = 1;
+            user_info.htu_id = res.data.htu_id;
+            user_info.ht_token = res.data.ht_token;
+            user_info.session_key = res.data.session_key;
+            user_info.openid = res.data.openid;
+          } });
+
+      } else {
+        console.log('登录失败！' + res.errMsg);
+      }
+    } });
+
+}
+
+function user_regist() {
+  wx.getSetting({
+    success: function success(res) {
+      if (!res.authSetting['scope.userInfo']) {
+        wx.authorize({
+          scope: 'scope.userInfo',
+          success: function success() {
+            wx.getUserInfo({
+              success: function success(res) {
+                //console.log(res)				  
+                wx.request({
+                  url: 'https://server.huotiantech.com/auth/wx_jiemi/wx_regist.php',
+                  data: {
+                    sessionKey: user_info.session_key,
+                    openid: user_info.openid,
+                    encryptedData: res.encryptedData,
+                    iv: res.iv },
+
+
+                  success: function success(res) {
+                    //console.log(res)
+                    user_info.htu_id = res.data.htu_id;
+                    user_info.ht_token = res.data.ht_token;
+
+                  } });
+
+              },
+              fail: function fail(res) {
+                console.log(res);
+              } });
+
+          } });
+
+      } else
+      {
+        wx.getUserInfo({
+          success: function success(res) {
+            wx.request({
+              url: 'https://server.huotiantech.com/auth/wx_jiemi/wx_regist.php',
+              data: {
+                sessionKey: user_info.session_key,
+                openid: user_info.openid,
+                encryptedData: res.encryptedData,
+                iv: res.iv },
+
+
+              success: function success(res) {
+                //console.log(res)
+                user_info.htu_id = res.data.htu_id;
+                user_info.ht_token = res.data.ht_token;
+              } });
+
+          },
+          fail: function fail(res) {
+            console.log(res);
+          } });
+
+      }
+    } });
+
+}
+
+/***/ }),
+
 /***/ 2:
 /*!******************************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js ***!
@@ -7772,7 +8048,38 @@ internalMixin(Vue);
 
 /***/ }),
 
-/***/ 24:
+/***/ 3:
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 34:
 /*!**********************************************************************************************!*\
   !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/static/language/language.js ***!
   \**********************************************************************************************/
@@ -7863,86 +8170,21 @@ var en = {
 
 /***/ }),
 
-/***/ 25:
-/*!********************************************************************************!*\
-  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/ble/wx_ble.js ***!
-  \********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
-  start_ble: start_ble,
-  stop_ble: stop_ble,
-  get_ble_state: get_ble_state,
-  cup_set_temp: cup_set_temp,
-  get_cup_state: get_cup_state };exports.default = _default;
-
-
-function start_ble() {
-
-}
-function stop_ble() {
-
-}
-function get_ble_state() {
-
-}
-function cup_set_temp() {
-
-}
-function get_cup_state() {
-
-}
-
-/***/ }),
-
-/***/ 3:
-/*!***********************************!*\
-  !*** (webpack)/buildin/global.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 34:
-/*!*****************************************************************************!*\
-  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/ble/ble.js ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
-
 /***/ 4:
 /*!*****************************************************************************!*\
   !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/pages.json ***!
   \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ 43:
+/*!*******************************************************************************!*\
+  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/hw_ble.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 

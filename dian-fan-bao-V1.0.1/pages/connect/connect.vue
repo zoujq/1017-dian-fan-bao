@@ -25,7 +25,7 @@
 <script>
 	import lan_data from "../../static/language/language.js";
 	//import VConsole from "../../static/vconsole.min.js"
-	import ble from '../../ble/ble.js';  
+	import ble from '../../js/hw_ble.js';  
 	
 	
 	export default {

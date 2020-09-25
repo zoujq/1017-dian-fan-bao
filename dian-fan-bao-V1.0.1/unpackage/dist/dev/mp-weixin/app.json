@@ -1,10 +1,10 @@
 {
   "pages": [
+    "pages/device/device",
     "pages/index/index",
     "pages/connect/connect",
     "pages/loading/loading",
-    "pages/test/test",
-    "pages/device/device"
+    "pages/test/test"
   ],
   "subPackages": [],
   "window": {
@@ -14,5 +14,5 @@
     "backgroundColor": "#F7F7F7"
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap24.json"
+  "sitemapLocation": "sitemap69.json"
 }
