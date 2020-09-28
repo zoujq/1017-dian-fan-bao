@@ -1729,97 +1729,154 @@ function normalizeComponent (
 /***/ }),
 
 /***/ 17:
-/*!*******************************************************************************!*\
-  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/wx_ble.js ***!
-  \*******************************************************************************/
+/*!*************************************************************************************!*\
+  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/discover_ble.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
-var _wx_login = _interopRequireDefault(__webpack_require__(/*! ./wx_login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+var _login = _interopRequireDefault(__webpack_require__(/*! ./login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _default =
+
 
 {
-  start_ble: start_ble,
-  stop_ble: stop_ble,
-  get_ble_state: get_ble_state,
-  cup_set_temp: cup_set_temp,
-  get_cup_state: get_cup_state,
   start_scan_ble: start_scan_ble,
-  get_scan_device_list: get_scan_device_list,
-  bind_device: bind_device,
-  clear_scaned_device: clear_scaned_device };exports.default = _default;
+  clear_scaned_device: clear_scaned_device,
+  sao_yi_sao: sao_yi_sao,
+  ble_rescan: ble_rescan,
+  get_scan_device: get_scan_device,
+  check_find_device: check_find_device,
+  stop_scan_ble: stop_scan_ble };exports.default = _default;
 
-var scan_device_list = {};
-var scan_device_arr = [];
-var user_info = '';
-var binded_device_arr = [];
-function start_ble() {
-
-}
-function stop_ble() {
-
-}
-function get_ble_state() {
-
-}
-function cup_set_temp() {
-
-}
-function get_cup_state() {
-
-}
-
+var find_device = 0;
+var scan_device = [];
+var wait_http = 0;
+var count = 0;
 function start_scan_ble()
 {
-  wx.openBluetoothAdapter({
-    success: function success(res) {
+  wait_http = 0;
+  console.log('start_scan_ble');
+  uni.closeBluetoothAdapter({
+    complete: function complete(res) {
       console.log(res);
-      wx.startBluetoothDevicesDiscovery({
-        success: function success(res) {
+      uni.openBluetoothAdapter({
+        complete: function complete(res) {
           console.log(res);
+          uni.startBluetoothDevicesDiscovery({
+            allowDuplicatesKey: true,
+            success: function success(res) {
+              console.log(res);
+            } });
+
         } });
 
     } });
 
-  console.log('start_scan_ble');
 
-  wx.onBluetoothDeviceFound(function (res) {
+  uni.onBluetoothDeviceFound(function (res) {
     var devices = res.devices;
     var d_hex = ab2hex(devices[0].advertisData);
-
-    if (d_hex.slice(0, 4) == 'c8c8')
+    if (count++ > 30)
     {
-      if (scan_device_list[d_hex] == null)
-      {
-        add_to_scan_device_list(d_hex);
-      }
+      console.log('fd');
+      count = 0;
+    }
 
+    if (wait_http == 0 && devices[0].RSSI > -50 && d_hex.slice(0, 4) == 'c8c8')
+    {
+      if (check_device_is_binged(d_hex) == 0)
+      {
+        wait_http = 1;
+        console.log(devices[0].RSSI);
+        get_scan_device_info(d_hex.slice(8, 20), hex2int(d_hex.slice(4, 8)));
+      } else
+      {
+        console.log('device:' + d_hex.slice(8, 20) + 'is already binged!');
+      }
     }
   });
 
 }
-function add_to_scan_device_list(d_hex)
+function check_device_is_binged(d_hex)
 {
-  user_info = _wx_login.default.get_user_info();
+  var htd_id = d_hex.slice(8, 20);
+  var i = 0;
+  var binded_d = _login.default.get_binded_device();
+  for (i = 0; i < binded_d.length; i++)
+  {
+    if (binded_d[i].htd_id == htd_id)
+    {
+      return 1;
+    }
+  }
 
-  wx.request({
-    url: 'https://server.huotiantech.com/device/get_product_info.php',
-    data: {
-      p_id: hex2int(d_hex.slice(4, 8)),
-      htu_id: user_info.htu_id,
-      ht_token: user_info.ht_token },
-
+  return 0;
+}
+function stop_scan_ble()
+{
+  uni.stopBluetoothDevicesDiscovery({
     success: function success(res) {
       console.log(res);
-      scan_device_list[d_hex] = 1;
-      scan_device_arr.push({ htd_id: d_hex.slice(8), p_name: res.data.p_name, p_icon: res.data.p_icon });
     } });
 
 }
-function get_scan_device_list()
+function ble_rescan()
 {
-  return scan_device_arr;
+  wait_http = 0;
+  uni.stopBluetoothDevicesDiscovery({
+    success: function success(res) {
+      console.log(res);
+      uni.openBluetoothAdapter({
+        success: function success(res) {
+          console.log(res);
+          uni.startBluetoothDevicesDiscovery({
+            allowDuplicatesKey: true,
+            success: function success(res) {
+              console.log(res);
+            } });
+
+        } });
+
+    } });
+
+}
+function get_scan_device_info(htd_id, htp_id)
+{
+  var user_info = _login.default.get_user_info();
+  console.log("htd_id: ".concat(htd_id, " , htp_id: ").concat(htp_id));
+  uni.request({
+    url: 'https://server.huotiantech.com/device/get_product_info.php',
+    data: {
+      htd_id: htd_id,
+      htp_id: htp_id,
+      htu_id: user_info.htu_id,
+      ht_token: user_info.ht_token },
+
+    complete: function complete() {
+      wait_http = 0;
+    },
+    success: function success(res) {
+      console.log(res);
+      if (res.data.errCode == 0)
+      {
+        scan_device = { htd_id: htd_id, p_name: res.data.p_name, p_icon: res.data.p_icon };
+        if (scan_device.p_name != null)
+        {
+          find_device = 1;
+        }
+      }
+
+
+    } });
+
+}
+function check_find_device() {
+  return find_device;
+}
+function get_scan_device()
+{
+  return scan_device;
 }
 
 // ArrayBuffer转16进度字符串示例
@@ -1849,58 +1906,86 @@ function hex2int(hex) {
     return acc;
   }, 0);
 }
-function bind_device(htd_id) {
-  wx.request({
-    url: 'http://server.huotiantech.com/device/bind_device.php',
-    data: {
-      htd_id: htd_id,
-      htu_id: user_info.htu_id,
-      ht_token: user_info.ht_token },
 
+function clear_scaned_device() {
+  find_device = 0;
+  scan_device = [];
+  wait_http = 0;
+}
+
+function sao_yi_sao() {
+  uni.scanCode({
     success: function success(res) {
       console.log(res);
     } });
 
 }
-function get_bind_device() {
-  wx.request({
-    url: 'http://server.huotiantech.com/device/get_binded_device.php',
-    data: {
-      htu_id: user_info.htu_id,
-      ht_token: user_info.ht_token },
-
-    success: function success(res) {
-      binded_device_arr = res.data.list;
-      console.log(binded_device_arr);
-    } });
-
-}
-function clear_scaned_device() {
-  scan_device_list = {};
-  scan_device_arr = [];
-}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 
 /***/ 18:
-/*!*********************************************************************************!*\
-  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/wx_login.js ***!
-  \*********************************************************************************/
+/*!******************************************************************************!*\
+  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/login.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default =
-{
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
   wx_login: wx_login,
   user_regist: user_regist,
   check_login: check_login,
-  get_user_info: get_user_info };exports.default = _default;
+  get_user_info: get_user_info,
+  get_storage_user_info: get_storage_user_info,
+  set_storage_user_info: set_storage_user_info,
+  get_binded_device: get_binded_device,
+  request_binded_device: request_binded_device,
+  bind_device: bind_device,
+  delete_device: delete_device,
+  set_connect_htd_id: set_connect_htd_id };exports.default = _default;
 
 
-var user_info = { called: 0, registed: 0, session_key: '', openid: '', htu_id: 0, ht_token: 0 };
+var user_info = {
+  inited: 1,
+  called: 0,
+  waiting: 0,
+  loged: 0,
+  registed: 0,
+  session_key: '',
+  openid: '',
+  htu_id: 0,
+  ht_token: 0,
+  device_arr: [],
+  connect_htd_id: '' };
+
+function get_storage_user_info() {
+  try {
+    var value = uni.getStorageSync('user_info');
+    if (value.inited == 1) {
+      user_info = value;
+    } else
+    {
+      set_storage_user_info();
+    }
+  } catch (e) {
+    set_storage_user_info();
+  }
+}
+function set_storage_user_info() {
+  try {
+    uni.setStorageSync('user_info', user_info);
+  } catch (e) {}
+}
 function get_user_info() {
   return user_info;
+}
+function set_user_info(user_info) {
+
+}
+function set_connect_htd_id(htd_id) {
+  user_info.connect_htd_id = htd_id;
+  set_storage_user_info();
 }
 function check_login() {
   if (user_info.called == 0)
@@ -1914,23 +1999,35 @@ function check_login() {
   return 1;
 }
 function wx_login() {
-  wx.login({
+  user_info.waiting = 1;
+  uni.login({
     success: function success(res) {
       console.log(res);
       if (res.code) {
         //发起网络请求
-        wx.request({
+        uni.request({
           url: 'https://server.huotiantech.com/auth/exchange_access_token.php',
           data: {
             js_code: res.code },
 
+          complete: function complete() {
+            user_info.waiting = 0;
+          },
           success: function success(res) {
-            //console.log(res)
+            console.log('uni_login 2');
+            console.log(res);
             user_info.called = 1;
             user_info.htu_id = res.data.htu_id;
             user_info.ht_token = res.data.ht_token;
             user_info.session_key = res.data.session_key;
             user_info.openid = res.data.openid;
+            user_info.loged = 1;
+            if (user_info.htu_id != 0)
+            {
+              user_info.registed = 1;
+              set_storage_user_info();
+              request_binded_device();
+            }
           } });
 
       } else {
@@ -1941,16 +2038,17 @@ function wx_login() {
 }
 
 function user_regist() {
-  wx.getSetting({
+  user_info.waiting = 1;
+  uni.getSetting({
     success: function success(res) {
       if (!res.authSetting['scope.userInfo']) {
-        wx.authorize({
+        uni.authorize({
           scope: 'scope.userInfo',
           success: function success() {
-            wx.getUserInfo({
+            uni.getUserInfo({
               success: function success(res) {
                 //console.log(res)				  
-                wx.request({
+                uni.request({
                   url: 'https://server.huotiantech.com/auth/wx_jiemi/wx_regist.php',
                   data: {
                     sessionKey: user_info.session_key,
@@ -1963,7 +2061,7 @@ function user_regist() {
                     //console.log(res)
                     user_info.htu_id = res.data.htu_id;
                     user_info.ht_token = res.data.ht_token;
-
+                    request_binded_device();
                   } });
 
               },
@@ -1975,9 +2073,9 @@ function user_regist() {
 
       } else
       {
-        wx.getUserInfo({
+        uni.getUserInfo({
           success: function success(res) {
-            wx.request({
+            uni.request({
               url: 'https://server.huotiantech.com/auth/wx_jiemi/wx_regist.php',
               data: {
                 sessionKey: user_info.session_key,
@@ -1990,6 +2088,7 @@ function user_regist() {
                 //console.log(res)
                 user_info.htu_id = res.data.htu_id;
                 user_info.ht_token = res.data.ht_token;
+                request_binded_device();
               } });
 
           },
@@ -2001,6 +2100,67 @@ function user_regist() {
     } });
 
 }
+
+function request_binded_device() {
+  uni.request({
+    url: 'http://server.huotiantech.com/device/get_binded_device.php',
+    data: {
+      htu_id: user_info.htu_id,
+      ht_token: user_info.ht_token },
+
+    complete: function complete() {
+      user_info.waiting = 0;
+    },
+    success: function success(res) {
+      console.log(res);
+      try {
+        user_info.device_arr = [];
+        res.data.list.forEach(function (item) {
+          user_info.device_arr.push({ htd_id: item[0], htp_id: item[1], p_name: item[2], p_icon: item[3] });
+        });
+      } catch (e)
+      {
+
+      }
+      user_info.registed = 1;
+      set_storage_user_info();
+    } });
+
+}
+function get_binded_device() {
+  return user_info.device_arr;
+}
+function bind_device(htd_id) {
+  user_info.waiting = 1;
+  uni.request({
+    url: 'http://server.huotiantech.com/device/bind_device.php',
+    data: {
+      htd_id: htd_id,
+      htu_id: user_info.htu_id,
+      ht_token: user_info.ht_token },
+
+    success: function success(res) {
+      console.log(res);
+      request_binded_device();
+    } });
+
+}
+function delete_device(htd_id)
+{
+  uni.request({
+    url: 'http://server.huotiantech.com/device/unbind_device.php',
+    data: {
+      htd_id: htd_id,
+      htu_id: user_info.htu_id,
+      ht_token: user_info.ht_token },
+
+    success: function success(res) {
+      console.log(res);
+      request_binded_device();
+    } });
+
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 
@@ -8170,6 +8330,253 @@ var en = {
 
 /***/ }),
 
+/***/ 35:
+/*!************************************************************************************!*\
+  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/connect_ble.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _login = _interopRequireDefault(__webpack_require__(/*! ./login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _default =
+
+{
+  start_ble: start_ble,
+  stop_ble: stop_ble,
+  get_ble_state: get_ble_state,
+  send_to_device: send_to_device,
+  set_on_received_data_callback: set_on_received_data_callback };exports.default = _default;
+
+
+var find_device = 0;
+var scan_device = [];
+var wait_http = 0;
+
+var ble_state = 0; //0-未连接  1-连接中  2-已连接
+var bang_ding_state = 0;
+var os = '';
+var ble_deviceId = '';
+var SERVICE_UUID = '00010203-0405-0607-0809-0A0B0C0DFFE0';
+var NOTIFY_CHARA_UUID = '00010203-0405-0607-0809-0A0B0C0DFFE1';
+var WRITE_CHARA_UUID = '00010203-0405-0607-0809-0A0B0C0DFFE2';
+
+function start_ble() {
+  console.log('start_ble()');
+  start_scan_ble();
+}
+function stop_ble() {
+  close_ble();
+  stop_scan_ble();
+}
+function get_ble_state() {
+  return ble_state;
+}
+function send_to_device(js_arr) {
+  var buffer = new ArrayBuffer(js_arr.length);
+  var dataView = new DataView(buffer);
+  var i = 0;
+  for (i = 0; i < js_arr.length; i++)
+  {
+    dataView.setUint8(i, js_arr[i]);
+  }
+  uni.writeBLECharacteristicValue({
+    // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+    deviceId: ble_deviceId,
+    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+    serviceId: SERVICE_UUID,
+    // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+    characteristicId: WRITE_CHARA_UUID,
+    // 这里的value是ArrayBuffer类型
+    value: buffer,
+    success: function success(res) {
+      // console.log('writeBLECharacteristicValue success', res.errMsg)
+    } });
+
+}
+function get_cup_state() {
+
+}
+function close_ble()
+{
+  uni.closeBLEConnection({
+    deviceId: ble_deviceId,
+    success: function success(res) {
+      console.log(res);
+    } });
+
+}
+function start_scan_ble()
+{
+  console.log('start_scan_ble');
+  ble_state = 1;
+  uni.closeBluetoothAdapter({
+    complete: function complete(res) {
+      console.log(res);
+      uni.openBluetoothAdapter({
+        complete: function complete(res) {
+          console.log(res);
+          uni.startBluetoothDevicesDiscovery({
+            success: function success(res) {
+              console.log(res);
+            } });
+
+        } });
+
+    } });
+
+
+  uni.onBluetoothDeviceFound(function (res) {
+    var devices = res.devices;
+    var d_hex = ab2hex(devices[0].advertisData);
+    console.log(res);
+    if (d_hex.slice(0, 4) == 'c8c8')
+    {
+      var connect_htd_id = _login.default.get_user_info().connect_htd_id;
+      console.log("connect_htd_id=".concat(connect_htd_id));
+      if (d_hex.slice(8, 20) == connect_htd_id)
+      {
+        console.log('connect_htd_id find:' + connect_htd_id);
+        ble_deviceId = devices[0].deviceId;
+        console.log('ble_deviceId:' + ble_deviceId);
+        uni.createBLEConnection({
+          deviceId: ble_deviceId,
+          fail: function fail(res) {
+            console.log(res);
+          },
+          success: function success(res) {
+            console.log(res);
+            uni.getBLEDeviceServices({
+              // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+              deviceId: ble_deviceId,
+              success: function success(res) {
+                console.log('device services:', res.services);
+
+                uni.getBLEDeviceCharacteristics({
+                  // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+                  deviceId: ble_deviceId,
+                  // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+                  serviceId: SERVICE_UUID,
+                  success: function success(res) {
+                    console.log('device getBLEDeviceCharacteristics:', res.characteristics);
+                    uni.notifyBLECharacteristicValueChange({
+                      state: true, // 启用 notify 功能
+                      // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+                      deviceId: ble_deviceId,
+                      // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+                      serviceId: SERVICE_UUID,
+                      // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+                      characteristicId: NOTIFY_CHARA_UUID,
+                      fail: function fail(res) {
+                        console.log(res);
+                      },
+                      success: function success(res) {
+                        console.log('notifyBLECharacteristicValueChange success', res.errMsg);
+                        ble_state = 2;
+                        stop_scan_ble();
+                      } });
+
+                  } });
+
+
+
+              } });
+
+          } });
+
+      }
+    }
+  });
+  uni.onBLEConnectionStateChange(function (res) {
+    // 该方法回调中可以用于处理连接意外断开等异常情况
+    console.log("device ".concat(res.deviceId, " state has changed, connected: ").concat(res.connected));
+    if (res.connected == false)
+    {
+      ble_state = 0;
+    }
+  });
+  uni.onBLECharacteristicValueChange(function (res) {
+    // console.log(`characteristic ${res.characteristicId} has changed, now is ${res.value}`)
+    // console.log(ab2hex(res.value))
+    on_received_data(res.value);
+  });
+}
+function on_received_data(data)
+{
+  var a8 = new Uint8Array(data);
+  var i = 0;
+  var js_arr = [];
+  for (i = 0; i < a8.length; i++)
+  {
+    js_arr[i] = a8[i];
+  }
+  //console.log(js_arr);
+  received_cb(js_arr);
+}
+var received_cb = {};
+function set_on_received_data_callback(cb)
+{
+  received_cb = cb;
+}
+function stop_scan_ble()
+{
+  uni.stopBluetoothDevicesDiscovery({
+    success: function success(res) {
+      console.log(res);
+    } });
+
+}
+function ble_rescan()
+{
+  uni.stopBluetoothDevicesDiscovery({
+    success: function success(res) {
+      console.log(res);
+      uni.openBluetoothAdapter({
+        success: function success(res) {
+          console.log(res);
+          uni.startBluetoothDevicesDiscovery({
+            allowDuplicatesKey: true,
+            success: function success(res) {
+              console.log(res);
+            } });
+
+        } });
+
+    } });
+
+}
+
+
+// ArrayBuffer转16进度字符串示例
+function ab2hex(buffer) {
+  var hexArr = Array.prototype.map.call(
+  new Uint8Array(buffer),
+  function (bit) {
+    return ('00' + bit.toString(16)).slice(-2);
+  });
+
+  return hexArr.join('');
+}
+function hex2int(hex) {
+  var len = hex.length,a = new Array(len),code;
+  for (var i = 0; i < len; i++) {
+    code = hex.charCodeAt(i);
+    if (48 <= code && code < 58) {
+      code -= 48;
+    } else {
+      code = (code & 0xdf) - 65 + 10;
+    }
+    a[i] = code;
+  }
+
+  return a.reduce(function (acc, c) {
+    acc = 16 * acc + c;
+    return acc;
+  }, 0);
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
 /***/ 4:
 /*!*****************************************************************************!*\
   !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/pages.json ***!
@@ -8181,7 +8588,7 @@ var en = {
 
 /***/ }),
 
-/***/ 43:
+/***/ 44:
 /*!*******************************************************************************!*\
   !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/hw_ble.js ***!
   \*******************************************************************************/

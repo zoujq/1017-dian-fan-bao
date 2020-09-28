@@ -27,12 +27,12 @@
 						</view>
 						<view class="yuyue">
 							<view class="yuyue-contain">
-								<view>预约</view><view  v-show="yuyue_switch==1"> {{day}}天{{time}}:{{minute}}开饭</view> 
+								<view>预约</view><view  v-show="yuyue_switch==1" class="yuyue_time"> {{day}}天{{time}}:{{minute}}开饭</view> 
 							</view>
 								<switch @change="On_yuyue_change" ></switch>
 						</view>
 						<view class="time-pick" v-show="yuyue_switch==1">
-							<picker-view indicator-style="height:50rpx;" mask-class='mask-c'  :value="value" @change="bindChange">
+							<picker-view  indicator-style="height:50rpx;" mask-class='mask-c'  :value="value" @change="bindChange">
 								<picker-view-column>
 									<view class="item" v-for="(item,index) in days" :key="index">{{item}}天</view>
 								</picker-view-column>
@@ -59,10 +59,9 @@
 			<view class="notic-text">
 			{{(errcode & 1) ? lan['Lan07'] : (errcode & 2) ? lan['Lan33'] :  (errcode & 4) ? lan['Lan32'] : ''}}</view>
 		</view>
-		<image class="idimg" src="../../static/xxhdpi/idimg.png" ></image>
-		<view class="logo-qie" @click="On_qie_huan">
+		<image class="idimg" src="../../static/xxhdpi/idimg.png"  ></image>
+		<view class="logo-qie" >
 			<image class="logo" ></image>
-			<image class="qiehuan"></image>
 		</view>
 		
 		<view class="cup-state" >
@@ -180,8 +179,8 @@
 	import loading from "../loading/loading.vue";
 	import lan_data from "../../static/language/language.js";
 	//import VConsole from "../../static/vconsole.min.js"
-	import ble from "../../js/wx_ble.js";  
-	import wx_api from "../../js/wx_login.js";
+	import connect_ble from "../../js/connect_ble.js";  
+	import login from "../../js/login.js";
 	
 	
 	var main_count=0;
@@ -232,7 +231,7 @@
 		onLoad() {
 			//new VConsole();
 			//this.ble_state=1;
-			// ble.change_nav_title();
+			// connect_ble.change_nav_title();
 			// console.log(navigator.language)			
 		},
 		onHide(){
@@ -256,13 +255,13 @@
 			cup_set(i){
 				this.food_mode=i;				
 				console.log(i);
-				ble.cup_set_temp(i);
+				connect_ble.cup_set_temp(i);
 			},
 			re_connect(){
 				this.ble_state=1;
 				re_connect_counter=0;
-				ble.stop_ble();
-				ble.start_ble()
+				connect_ble.stop_ble();
+				connect_ble.start_ble()
 			},
 			index_loop(){
 				console.log('index'+re_connect_counter);
@@ -271,8 +270,8 @@
 				{
 					re_connect_counter++;	
 					if(re_connect_counter%8==0){
-						ble.stop_ble();
-						ble.start_ble();
+						connect_ble.stop_ble();
+						connect_ble.start_ble();
 					}
 					if(re_connect_counter==3)
 					{
@@ -280,19 +279,19 @@
 						this.pop_show=1;
 					}
 				}
-				if(ble.get_ble_state()==0 && this.ble_state==1)
+				if(connect_ble.get_ble_state()==0 && this.ble_state==1)
 				{
-					ble.stop_ble();
-					ble.start_ble();
+					connect_ble.stop_ble();
+					connect_ble.start_ble();
 				}
-				if(ble.get_ble_state()==0 && this.ble_state==2)
+				if(connect_ble.get_ble_state()==0 && this.ble_state==2)
 				{
 					this.ble_state=1;
 					this.food_mode=0;
-					ble.stop_ble();
-					ble.start_ble();
+					connect_ble.stop_ble();
+					connect_ble.start_ble();
 				}
-				if(this.ble_state!=2 && ble.get_ble_state()==2)
+				if(this.ble_state!=2 && connect_ble.get_ble_state()==2)
 				{
 					this.ble_state=2;
 					re_connect_counter=0;
@@ -315,7 +314,7 @@
 				}	
 			},
 			check_cup_state(){
-				var sta=ble.get_cup_state();
+				var sta=connect_ble.get_cup_state();
 				if(sta.temp != this.temp)
 				{
 					this.temp=sta.temp;
@@ -432,13 +431,7 @@
 					this.minute=min_date.getMinutes()
 					this.value=[mid_day=='今'?0:1,this.time,this.minute]
 				}
-			},
-			On_qie_huan(){
-				uni.redirectTo({
-				    url: '../device/device' 
-				}); 
-			
-			}
+			}			
 			
 			
 		}
@@ -544,6 +537,9 @@
 		font-size: 41.67rpx;
 		color: #FF7500;
 	}
+	.yuyue_time{
+		color: #FF7500;
+	}
 	.yuyue switch{
 		margin-right: -11rpx;
 	}
@@ -551,6 +547,10 @@
 		height: 200rpx;
 		width: auto;
 		/* background-color: #E64548; */
+	}
+	picker-view {
+	    width: 100%;
+	    height: 200rpx;
 	}
 	.mask-c{
 		/* opacity: 0.6;
@@ -843,5 +843,8 @@
 		font-size: 36rpx;
 		color: #8f8f94;
 	}
+	
+	
+	
 
 </style>

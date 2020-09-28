@@ -27,10 +27,18 @@
             "style" : {}
         }
         
+        ,{
+            "path" : "pages/p10002/p10002",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/p10001/p10001",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "FUGUANG-MUG",
+		"navigationBarTitleText": "火天物联",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F7F7F7"
 	}

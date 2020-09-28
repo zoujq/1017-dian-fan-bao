@@ -263,6 +263,9 @@
 	font-size: 41.67rpx;
 	color: #FF7500;
 }
+.yuyue_time{
+	color: #FF7500;
+}
 .yuyue switch{
 	margin-right: -11rpx;
 }
@@ -270,6 +273,10 @@
 	height: 200rpx;
 	width: auto;
 	/* background-color: #E64548; */
+}
+picker-view {
+    width: 100%;
+    height: 200rpx;
 }
 .mask-c{
 	/* opacity: 0.6;
@@ -630,5 +637,8 @@
 	font-size: 36rpx;
 	color: #8f8f94;
 }
+
+
+
 
 

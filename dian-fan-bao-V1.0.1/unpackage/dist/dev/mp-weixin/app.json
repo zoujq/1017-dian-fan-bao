@@ -4,15 +4,17 @@
     "pages/index/index",
     "pages/connect/connect",
     "pages/loading/loading",
-    "pages/test/test"
+    "pages/test/test",
+    "pages/p10002/p10002",
+    "pages/p10001/p10001"
   ],
   "subPackages": [],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "FUGUANG-MUG",
+    "navigationBarTitleText": "火天物联",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F7F7F7"
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap69.json"
+  "sitemapLocation": "sitemap73.json"
 }

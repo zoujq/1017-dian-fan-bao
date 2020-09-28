@@ -6,7 +6,7 @@
 				日期：{{year}}年{{month}}月{{day}}日
 			</view>
 		</view>
-        <picker-view v-if="visible" :indicator-style="indicatorStyle" :value="value" @change="bindChange">
+<!--        <picker-view v-if="visible" :indicator-style="indicatorStyle" :value="value" @change="bindChange">
             <picker-view-column>
                 <view class="item" v-for="(item,index) in years" :key="index">{{item}}年</view>
             </picker-view-column>
@@ -16,7 +16,21 @@
             <picker-view-column>
                 <view class="item" v-for="(item,index) in days" :key="index">{{item}}日</view>
             </picker-view-column>
-        </picker-view>
+        </picker-view> -->
+		
+		<view class="time-pick" >
+			<picker-view  indicator-style="height:50rpx;" mask-class='mask-c'  :value="value" @change="bindChange">
+				<picker-view-column>
+					<view class="item" v-for="(item,index) in days" :key="index">{{item}}天</view>
+				</picker-view-column>
+				<picker-view-column>
+					<view class="item" v-for="(item,index) in months" :key="index">{{item}}时</view>
+				</picker-view-column>
+				<picker-view-column>
+					<view class="item" v-for="(item,index) in years" :key="index">{{item}}分</view>
+				</picker-view-column>
+			</picker-view>
+		</view>	
     </view>
 </template>
 

@@ -135,7 +135,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
 
 
 
@@ -185,25 +185,8 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var _wx_ble = _interopRequireDefault(__webpack_require__(/*! ../../js/wx_ble.js */ 17));
-var _wx_login = _interopRequireDefault(__webpack_require__(/*! ../../js/wx_login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
-//
+var _discover_ble = _interopRequireDefault(__webpack_require__(/*! ../../js/discover_ble.js */ 17));
+var _login = _interopRequireDefault(__webpack_require__(/*! ../../js/login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
 //
@@ -252,36 +235,91 @@ var _wx_login = _interopRequireDefault(__webpack_require__(/*! ../../js/wx_login
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var loop_id = -1;var count = 0;var log_check = 0;var search_count = 0;var last_scan_num = 0;var _default = { data: function data() {return { searching: 0, scope_userInfo: 1, scan_device_num: 0, scan_list: [] };}, onLoad: function onLoad() {_wx_login.default.wx_login();}, onShow: function onShow() {loop_id = setInterval(this.loop, 1000, '');}, onHide: function onHide() {clearInterval(loop_id);}, methods: { loop: function loop() {count++;if (log_check == 0) {console.log('3');if (_wx_login.default.check_login() == 0) {this.scope_userInfo = 0;log_check = 1;} else if (_wx_login.default.check_login() == 1) {log_check = 1;}}if (this.searching == 1) {search_count++;if (search_count > 15) {search_count = 0;this.searching = 0;}this.scan_device_num = _wx_ble.default.get_scan_device_list().length;if (last_scan_num != this.scan_device_num) {last_scan_num = this.scan_device_num;this.scan_list = _wx_ble.default.get_scan_device_list();}}}, tian_jia: function tian_jia() {this.searching = 1;last_scan_num = 0;_wx_ble.default.start_scan_ble();},
-    t1: function t1() {
-      console.log('t1');
-      console.log(_wx_ble.default.get_scan_device_list());
+var loop_id = -1;var count = 0;var log_check = 0;var search_count = 0;var user_info;var device_list_num = 0;var ble_inited = 0;var del_htd_id = '';var _default = { data: function data() {return { scope_userInfo: 1, find_new_device: 0, delete_deivce: 0, new_device: [], device_arr: [] };}, onLoad: function onLoad() {_login.default.get_storage_user_info();}, onShow: function onShow() {loop_id = setInterval(this.loop, 1000, '');ble_inited = 0;this.device_arr = _login.default.get_binded_device();}, onHide: function onHide() {clearInterval(loop_id);_discover_ble.default.stop_scan_ble();}, methods: { loop: function loop() {count++;if (log_check == 0) {user_info = _login.default.get_user_info(); // console.log(user_info);
+        if (user_info.waiting == 1) {return;}if (user_info.loged == 0) {_login.default.wx_login();return;}if (user_info.registed == 0) {
+          this.scope_userInfo = 0;
+          return;
+        }
+        log_check = 1;
+      }
+      if (device_list_num != _login.default.get_binded_device().length)
+      {
+        this.device_arr = _login.default.get_binded_device();
+        device_list_num = this.device_arr.length;
+      }
+      if (ble_inited == 0)
+      {
+        _discover_ble.default.start_scan_ble();
+        ble_inited = 1;
+      }
+      if (count % 15 == 0) {
+        _discover_ble.default.ble_rescan();
+        _login.default.request_binded_device();
+        console.log(_login.default.get_user_info());
+      }
+
+      if (count > 10 && this.find_new_device == 0 && _discover_ble.default.check_find_device() == 1)
+      {
+        this.new_device = _discover_ble.default.get_scan_device();
+        this.find_new_device = 1;
+        console.log(1012);
+      }
+
+
     },
     getUserInfo: function getUserInfo() {
       this.scope_userInfo = 1;
-      _wx_login.default.user_regist();
+      _login.default.user_regist();
+
+    },
+    tian_jia: function tian_jia() {
+      _discover_ble.default.sao_yi_sao();
+    },
+    t1: function t1() {
+      console.log('t1');
+
 
     },
     bind: function bind(htd_id) {
+      count = 1;
+      _discover_ble.default.stop_scan_ble();
+      this.find_new_device = 0;
       console.log('bind:' + htd_id);
-      _wx_ble.default.bind_device(htd_id);
-      _wx_ble.default.clear_scaned_device();
+      _login.default.bind_device(htd_id);
+      _discover_ble.default.clear_scaned_device();
+    },
+    no_bind: function no_bind() {
+      this.find_new_device = 0;
+      _discover_ble.default.clear_scaned_device();
+    },
+    t2: function t2() {
+      uni.navigateTo({
+        url: '../test/test' });
+
+    },
+    moveHandle: function moveHandle() {
+
+    },
+    long_press: function long_press(del_id) {
+      console.log("longpress");
+      this.delete_deivce = 1;
+      del_htd_id = del_id;
+    },
+    click_device: function click_device(htd_id, htp_id) {
+      console.log('connect:htp_id=' + htp_id + ",htd_id=" + htd_id);
+      _login.default.set_connect_htd_id(htd_id);
+      uni.navigateTo({
+        url: '../p' + htp_id + '/p' + htp_id });
+
+    },
+    cancel_delete: function cancel_delete() {
+      this.delete_deivce = 0;
+    },
+    sure_delete: function sure_delete() {
+      this.delete_deivce = 0;
+      _login.default.delete_device(del_htd_id);
     } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 /* 17 */,
