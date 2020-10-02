@@ -760,7 +760,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1783,7 +1783,7 @@ function start_scan_ble()
       count = 0;
     }
 
-    if (wait_http == 0 && devices[0].RSSI > -50 && d_hex.slice(0, 4) == 'c8c8')
+    if (wait_http == 0 && devices[0].RSSI > -50 && d_hex.slice(4, 8) == '88a0')
     {
       if (check_device_is_binged(d_hex) == 0)
       {
@@ -1962,7 +1962,7 @@ var user_info = {
 function get_storage_user_info() {
   try {
     var value = uni.getStorageSync('user_info');
-    if (value.inited == 1) {
+    if (value.inited == 1 && value.htu_id > 10000 && value.ht_token.length == 32) {
       user_info = value;
     } else
     {
@@ -2059,9 +2059,13 @@ function user_regist() {
 
                   success: function success(res) {
                     //console.log(res)
-                    user_info.htu_id = res.data.htu_id;
-                    user_info.ht_token = res.data.ht_token;
-                    request_binded_device();
+                    if (res.data.errCode == 0)
+                    {
+                      user_info.htu_id = res.data.htu_id;
+                      user_info.ht_token = res.data.ht_token;
+                      user_info.registed = 1;
+                      request_binded_device();
+                    }
                   } });
 
               },
@@ -2085,10 +2089,14 @@ function user_regist() {
 
 
               success: function success(res) {
-                //console.log(res)
-                user_info.htu_id = res.data.htu_id;
-                user_info.ht_token = res.data.ht_token;
-                request_binded_device();
+                if (res.data.errCode == 0)
+                {
+                  user_info.htu_id = res.data.htu_id;
+                  user_info.ht_token = res.data.ht_token;
+                  user_info.registed = 1;
+                  request_binded_device();
+                }
+
               } });
 
           },
@@ -2103,7 +2111,7 @@ function user_regist() {
 
 function request_binded_device() {
   uni.request({
-    url: 'http://server.huotiantech.com/device/get_binded_device.php',
+    url: 'https://server.huotiantech.com/device/get_binded_device.php',
     data: {
       htu_id: user_info.htu_id,
       ht_token: user_info.ht_token },
@@ -2122,7 +2130,7 @@ function request_binded_device() {
       {
 
       }
-      user_info.registed = 1;
+      user_info.waiting = 0;
       set_storage_user_info();
     } });
 
@@ -2133,7 +2141,7 @@ function get_binded_device() {
 function bind_device(htd_id) {
   user_info.waiting = 1;
   uni.request({
-    url: 'http://server.huotiantech.com/device/bind_device.php',
+    url: 'https://server.huotiantech.com/device/bind_device.php',
     data: {
       htd_id: htd_id,
       htu_id: user_info.htu_id,
@@ -2148,7 +2156,7 @@ function bind_device(htd_id) {
 function delete_device(htd_id)
 {
   uni.request({
-    url: 'http://server.huotiantech.com/device/unbind_device.php',
+    url: 'https://server.huotiantech.com/device/unbind_device.php',
     data: {
       htd_id: htd_id,
       htu_id: user_info.htu_id,
@@ -7688,7 +7696,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -7709,14 +7717,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7801,7 +7809,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -8356,9 +8364,13 @@ var ble_state = 0; //0-未连接  1-连接中  2-已连接
 var bang_ding_state = 0;
 var os = '';
 var ble_deviceId = '';
-var SERVICE_UUID = '00010203-0405-0607-0809-0A0B0C0DFFE0';
-var NOTIFY_CHARA_UUID = '00010203-0405-0607-0809-0A0B0C0DFFE1';
-var WRITE_CHARA_UUID = '00010203-0405-0607-0809-0A0B0C0DFFE2';
+// var SERVICE_UUID ='00010203-0405-0607-0809-0A0B0C0DFFE0';
+// var NOTIFY_CHARA_UUID ='00010203-0405-0607-0809-0A0B0C0DFFE1';
+// var WRITE_CHARA_UUID ='00010203-0405-0607-0809-0A0B0C0DFFE2';
+var SERVICE_UUID = '0000FFE0-0000-1000-8000-00805F9B34FB';
+var NOTIFY_CHARA_UUID = '0000FFE1-0000-1000-8000-00805F9B34FB';
+var WRITE_CHARA_UUID = '0000FFE2-0000-1000-8000-00805F9B34FB';
+
 
 function start_ble() {
   console.log('start_ble()');
@@ -8375,6 +8387,7 @@ function send_to_device(js_arr) {
   var buffer = new ArrayBuffer(js_arr.length);
   var dataView = new DataView(buffer);
   var i = 0;
+  console.log("send:".concat(js_arr));
   for (i = 0; i < js_arr.length; i++)
   {
     dataView.setUint8(i, js_arr[i]);
@@ -8429,7 +8442,7 @@ function start_scan_ble()
     var devices = res.devices;
     var d_hex = ab2hex(devices[0].advertisData);
     console.log(res);
-    if (d_hex.slice(0, 4) == 'c8c8')
+    if (d_hex.slice(4, 8) == '88a0')
     {
       var connect_htd_id = _login.default.get_user_info().connect_htd_id;
       console.log("connect_htd_id=".concat(connect_htd_id));
@@ -8445,10 +8458,11 @@ function start_scan_ble()
           },
           success: function success(res) {
             console.log(res);
+            stop_scan_ble();
             uni.getBLEDeviceServices({
               // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
               deviceId: ble_deviceId,
-              success: function success(res) {
+              complete: function complete(res) {
                 console.log('device services:', res.services);
 
                 uni.getBLEDeviceCharacteristics({
@@ -8456,7 +8470,10 @@ function start_scan_ble()
                   deviceId: ble_deviceId,
                   // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
                   serviceId: SERVICE_UUID,
-                  success: function success(res) {
+                  fail: function fail(res) {
+                    console.log(res);
+                  },
+                  complete: function complete(res) {
                     console.log('device getBLEDeviceCharacteristics:', res.characteristics);
                     uni.notifyBLECharacteristicValueChange({
                       state: true, // 启用 notify 功能
@@ -8472,7 +8489,7 @@ function start_scan_ble()
                       success: function success(res) {
                         console.log('notifyBLECharacteristicValueChange success', res.errMsg);
                         ble_state = 2;
-                        stop_scan_ble();
+
                       } });
 
                   } });
@@ -8489,7 +8506,7 @@ function start_scan_ble()
   uni.onBLEConnectionStateChange(function (res) {
     // 该方法回调中可以用于处理连接意外断开等异常情况
     console.log("device ".concat(res.deviceId, " state has changed, connected: ").concat(res.connected));
-    if (res.connected == false)
+    if (res.connected == false && ble_state == 2)
     {
       ble_state = 0;
     }

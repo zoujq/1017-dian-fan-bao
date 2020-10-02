@@ -483,9 +483,9 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 
 
+
 var _loading = _interopRequireDefault(__webpack_require__(/*! ../loading/loading.vue */ 27));
 var _language = _interopRequireDefault(__webpack_require__(/*! ../../static/language/language.js */ 34));
-
 var _connect_ble = _interopRequireDefault(__webpack_require__(/*! ../../js/connect_ble.js */ 35));
 var _login = _interopRequireDefault(__webpack_require__(/*! ../../js/login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
@@ -665,21 +665,23 @@ var _login = _interopRequireDefault(__webpack_require__(/*! ../../js/login.js */
 //
 //
 //
-//import VConsole from "../../static/vconsole.min.js"
-var main_count = 0;var re_connect_counter = 0;var loop_id = -1;var shi_pu = [[0, '精煮饭', 60], [1, '快煮饭', 25], [2, '煮粥', 50], [3, '热饭', 25], [4, '酸奶', 480], [5, '煲鸡汤', 90], [6, '煲鸭汤', 90], [7, '煲排骨汤', 80], [8, '焖猪蹄', 90], [9, '蛋糕', 30], [10, '银耳莲子粥', 60], [11, '鱼', 45], [12, '保温', 480]];var current_shi_pu = 0;var is_auto_bao_wen = 0;var _default = { components: { loading: _loading.default }, data: function data() {var days = ['今', '明'];var day = '今';var times = [];var time = 1;var minutes = [];var minute = 1;for (var i = 0; i <= 23; i++) {times.push(i);}for (var _i = 0; _i <= 59; _i++) {minutes.push(_i);}return { pop_show: 0, lan: _language.default.cn, ble_state: 0, temp: 0, food_mode: 0, work_mode: 0, battery: 0, charging: 0, errcode: 0, yuyue_switch: 0, use_minute: 0, food_name: '', days: days, day: day, times: times, time: time, minutes: minutes, minute: minute, value: [0, 0, 0], kai_fan_shi_jian: '', dang_qian_shi_pu: '' };}, onLoad: function onLoad() {//new VConsole();
-  }, onUnload: function onUnload() {clearInterval(loop_id);_connect_ble.default.stop_ble();}, onHide: function onHide() {clearInterval(loop_id);_connect_ble.default.stop_ble();console.log('index onHide');}, onShow: function onShow() {loop_id = setInterval(this.loop, 1000, '');this.ble_state = 1;console.log('index onShow');_connect_ble.default.start_ble();re_connect_counter = 0;_connect_ble.default.set_on_received_data_callback(this.on_received_data);}, methods: { loop: function loop() {console.log('index' + re_connect_counter);if (this.ble_state == 1 && re_connect_counter < 30) {re_connect_counter++;if (re_connect_counter % 8 == 0) {_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (re_connect_counter == 30) {this.ble_state = 0;this.pop_show = 1;}}if (_connect_ble.default.get_ble_state() == 0 && this.ble_state == 1) {_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (_connect_ble.default.get_ble_state() == 0 && this.ble_state == 2) {this.ble_state = 1;this.food_mode = 0;_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (this.ble_state != 2 && _connect_ble.default.get_ble_state() == 2) {this.ble_state = 2;re_connect_counter = 0;}if (this.ble_state == 2) {this.check_cup_state();}}, on_received_data: function on_received_data(js_arr) {console.log(js_arr);if (js_arr[0] != 0xC8 || js_arr[1] != 2) {return;}this.work_mode = js_arr[2];current_shi_pu = js_arr[3];var t1 = new Date();t1.setTime(t1.getTime() + ((js_arr[4] << 8) + js_arr[5]) * 60000);console.log(t1);this.kai_fan_shi_jian = t1.getHours() + ':' + t1.getMinutes();this.dang_qian_shi_pu = shi_pu[current_shi_pu];}, shao_hou_retry: function shao_hou_retry(e) {this.pop_show = 0;}, like_chong_lian: function like_chong_lian(e) {this.pop_show = 0;this.re_connect();}, re_connect: function re_connect() {this.ble_state = 1;re_connect_counter = 0;_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}, check_cup_state: function check_cup_state() {// var sta=connect_ble.get_cup_state();
+//
+var main_count = 0;var re_connect_counter = 0;var loop_id = -1;var shi_pu = [[0, '精煮饭', 60], [1, '快煮饭', 25], [2, '煮粥', 50], [3, '热饭', 25], [4, '酸奶', 480], [5, '煲鸡汤', 90], [6, '煲鸭汤', 90], [7, '煲排骨汤', 80], [8, '焖猪蹄', 90], [9, '蛋糕', 30], [10, '银耳莲子粥', 60], [11, '鱼', 45], [12, '保温', 480]];var current_shi_pu = 0;var select_shi_pu = 0;var is_auto_bao_wen = 0;var _default = { components: { loading: _loading.default }, data: function data() {var days = ['今', '明'];var day = '今';var times = [];var time = 1;var minutes = [];var minute = 1;for (var i = 0; i <= 23; i++) {times.push(i);}for (var _i = 0; _i <= 59; _i++) {minutes.push(_i);}return { pop_show: 0, lan: _language.default.cn, ble_state: 0, temp: 0, food_mode: 0, work_mode: 0, battery: 0, charging: 0, errcode: 0, yuyue_switch: 0, use_minute: 0, food_name: '', days: days, day: day, times: times, time: time, minutes: minutes, minute: minute, value: [0, 0, 0], kai_fan_shi_jian: '', dang_qian_shi_pu: '' };}, onLoad: function onLoad() {//new VConsole();
+  }, onUnload: function onUnload() {clearInterval(loop_id);_connect_ble.default.stop_ble();}, onHide: function onHide() {clearInterval(loop_id);_connect_ble.default.stop_ble();console.log('index onHide');}, onShow: function onShow() {loop_id = setInterval(this.loop, 1000, '');this.ble_state = 1;console.log('index onShow');_connect_ble.default.start_ble();re_connect_counter = 0;_connect_ble.default.set_on_received_data_callback(this.on_received_data);}, methods: { loop: function loop() {console.log('index' + re_connect_counter);if (this.ble_state == 1 && re_connect_counter < 30) {re_connect_counter++;if (re_connect_counter % 8 == 0) {_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (re_connect_counter == 30) {this.ble_state = 0;this.pop_show = 1;}}if (_connect_ble.default.get_ble_state() == 0 && this.ble_state == 1) {_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (_connect_ble.default.get_ble_state() == 0 && this.ble_state == 2) {this.ble_state = 1;this.food_mode = 0;_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (this.ble_state != 2 && _connect_ble.default.get_ble_state() == 2) {this.ble_state = 2;re_connect_counter = 0;}if (this.ble_state == 2) {this.check_cup_state();}}, on_received_data: function on_received_data(js_arr) {console.log(js_arr);if (js_arr[0] != 0xC8 || js_arr[1] != 2) {return;}this.work_mode = js_arr[2];current_shi_pu = js_arr[3];var t1 = new Date();t1.setTime(t1.getTime() + ((js_arr[4] << 8) + js_arr[5]) * 60000);console.log(t1);this.kai_fan_shi_jian = t1.getHours() + ':' + t1.getMinutes();this.dang_qian_shi_pu = shi_pu[current_shi_pu][1];}, shao_hou_retry: function shao_hou_retry(e) {this.pop_show = 0;}, like_chong_lian: function like_chong_lian(e) {this.pop_show = 0;this.re_connect();}, re_connect: function re_connect() {this.ble_state = 1;re_connect_counter = 0;_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}, check_cup_state: function check_cup_state() {// var sta=connect_ble.get_cup_state();
       _connect_ble.default.send_to_device([0xC8, 0x02]);}, t1: function t1() {// uni.redirectTo({
       //     url: '../connect/connect'
       // });
-    }, moveHandle: function moveHandle() {}, bindChange: function bindChange(e) {var val = e.detail.value;this.day = this.days[val[0]];this.time = this.times[val[1]];this.minute = this.minutes[val[2]];this.check_time_vaild(this.use_minute, this.day, this.time, this.minute);}, On_yuyue_change: function On_yuyue_change(e) {if (e.detail.value) {this.yuyue_switch = 1;} else {this.yuyue_switch = 0;}
+    }, moveHandle: function moveHandle() {}, bindChange: function bindChange(e) {var val = e.detail.value;this.day = this.days[val[0]];this.time = this.times[val[1]];this.minute = this.minutes[val[2]];this.check_time_vaild(this.use_minute, this.day, this.time, this.minute);}, On_yuyue_change: function On_yuyue_change(e) {if (e.detail.value) {this.yuyue_switch = 1;} else {this.yuyue_switch = 0;
+      }
       console.log('this.yuyue_switch=' + this.yuyue_switch);
     },
     On_set_food_mode: function On_set_food_mode(num) {
-      current_shi_pu = num;
+      select_shi_pu = num;
       this.food_name = shi_pu[num][1];
       this.use_minute = shi_pu[num][2];
       this.pop_show = 2;
       this.check_time_vaild(this.use_minute, '今', 0, 0);
+
     },
     auto_bao_wen: function auto_bao_wen(e) {
       console.log(e);
@@ -699,7 +701,7 @@ var main_count = 0;var re_connect_counter = 0;var loop_id = -1;var shi_pu = [[0,
     },
     kai_shi: function kai_shi() {
       this.pop_show = 0;
-      var work_time = shi_pu[current_shi_pu][2];
+      var work_time = shi_pu[select_shi_pu][2];
       var wait_time = 0;
       if (this.yuyue_switch == 1)
       {
@@ -712,10 +714,10 @@ var main_count = 0;var re_connect_counter = 0;var loop_id = -1;var shi_pu = [[0,
         t3.setUTCHours(this.time, this.minute);
 
         console.log();
-        wait_time = (t3 - t2) / 60000 - work_time + 1;
+        wait_time = (t3 - t2) / 60000 - work_time;
       }
 
-      _connect_ble.default.send_to_device([0xC8, 0x01, current_shi_pu, work_time >> 8, work_time & 0xFF,
+      _connect_ble.default.send_to_device([0xC8, 0x01, select_shi_pu, work_time >> 8, work_time & 0xFF,
       wait_time >> 8, wait_time & 0XFF, is_auto_bao_wen]);
 
     },

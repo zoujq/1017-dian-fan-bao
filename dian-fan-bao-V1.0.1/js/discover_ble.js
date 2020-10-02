@@ -45,7 +45,7 @@ function start_scan_ble()
 		  count=0;
 	  }
 	  
-	  if(wait_http ==0 && devices[0].RSSI>-50 && d_hex.slice(0,4)=='c8c8')
+	  if(wait_http ==0 && devices[0].RSSI>-50 && d_hex.slice(4,8)=='88a0')
 	  {
 		  if(check_device_is_binged(d_hex)==0)
 		  {

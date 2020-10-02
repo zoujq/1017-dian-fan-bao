@@ -185,6 +185,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
 var _discover_ble = _interopRequireDefault(__webpack_require__(/*! ../../js/discover_ble.js */ 17));
 var _login = _interopRequireDefault(__webpack_require__(/*! ../../js/login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
@@ -235,11 +240,20 @@ var _login = _interopRequireDefault(__webpack_require__(/*! ../../js/login.js */
 //
 //
 //
-var loop_id = -1;var count = 0;var log_check = 0;var search_count = 0;var user_info;var device_list_num = 0;var ble_inited = 0;var del_htd_id = '';var _default = { data: function data() {return { scope_userInfo: 1, find_new_device: 0, delete_deivce: 0, new_device: [], device_arr: [] };}, onLoad: function onLoad() {_login.default.get_storage_user_info();}, onShow: function onShow() {loop_id = setInterval(this.loop, 1000, '');ble_inited = 0;this.device_arr = _login.default.get_binded_device();}, onHide: function onHide() {clearInterval(loop_id);_discover_ble.default.stop_scan_ble();}, methods: { loop: function loop() {count++;if (log_check == 0) {user_info = _login.default.get_user_info(); // console.log(user_info);
-        if (user_info.waiting == 1) {return;}if (user_info.loged == 0) {_login.default.wx_login();return;}if (user_info.registed == 0) {
+//
+//
+//
+//
+//
+var loop_id = -1;var count = 0;var log_check = 0;var search_count = 0;var user_info;var device_list_num = 0;var ble_inited = 0;var del_htd_id = '';var waiting_count = 0;var _default = { data: function data() {return { scope_userInfo: 1, find_new_device: 0, delete_deivce: 0, new_device: [], device_arr: [] };}, onLoad: function onLoad() {_login.default.get_storage_user_info();}, onShow: function onShow() {ble_inited = 0;this.device_arr = _login.default.get_binded_device();loop_id = setInterval(this.loop, 1000, '');}, onHide: function onHide() {clearInterval(loop_id);_discover_ble.default.stop_scan_ble();}, methods: { loop: function loop() {count++;console.log('d1');if (log_check == 0) {user_info = _login.default.get_user_info();console.log(user_info);if (user_info.waiting == 1) {if (waiting_count++ > 8) {waiting_count = 0;user_info.waiting = 0;}return;}if (user_info.loged == 0) {_login.default.wx_login();return;}
+
+        if (user_info.registed == 0)
+        {
+          console.log('user_info.registed==0');
           this.scope_userInfo = 0;
           return;
         }
+        _login.default.request_binded_device();
         log_check = 1;
       }
       if (device_list_num != _login.default.get_binded_device().length)

@@ -16,9 +16,13 @@ var ble_state=0;//0-未连接  1-连接中  2-已连接
 var bang_ding_state=0;
 var os='';
 var ble_deviceId='';
-var SERVICE_UUID ='00010203-0405-0607-0809-0A0B0C0DFFE0';
-var NOTIFY_CHARA_UUID ='00010203-0405-0607-0809-0A0B0C0DFFE1';
-var WRITE_CHARA_UUID ='00010203-0405-0607-0809-0A0B0C0DFFE2';
+// var SERVICE_UUID ='00010203-0405-0607-0809-0A0B0C0DFFE0';
+// var NOTIFY_CHARA_UUID ='00010203-0405-0607-0809-0A0B0C0DFFE1';
+// var WRITE_CHARA_UUID ='00010203-0405-0607-0809-0A0B0C0DFFE2';
+var SERVICE_UUID = '0000FFE0-0000-1000-8000-00805F9B34FB';
+var NOTIFY_CHARA_UUID ='0000FFE1-0000-1000-8000-00805F9B34FB';
+var WRITE_CHARA_UUID ='0000FFE2-0000-1000-8000-00805F9B34FB';
+ 
 
 function start_ble(){
 	console.log('start_ble()');
@@ -35,6 +39,7 @@ function send_to_device(js_arr){
 	const buffer = new ArrayBuffer(js_arr.length)
 	const dataView = new DataView(buffer)
 	var i=0;
+	console.log(`send:${js_arr}`)
 	for(i=0;i<js_arr.length;i++)
 	{
 		dataView.setUint8(i, js_arr[i]);
@@ -89,7 +94,7 @@ function start_scan_ble()
 	  var devices = res.devices;
 	  var d_hex=ab2hex(devices[0].advertisData);
 	  console.log(res); 
-	  if(d_hex.slice(0,4)=='c8c8')
+	  if(d_hex.slice(4,8)=='88a0')
 	  {
 		  var connect_htd_id=login.get_user_info().connect_htd_id;
 		  console.log(`connect_htd_id=${connect_htd_id}`);
@@ -105,10 +110,11 @@ function start_scan_ble()
 				},
 			    success(res) {
 			      console.log(res)
+				  stop_scan_ble();
 				  uni.getBLEDeviceServices({
 				    // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
 				    deviceId:ble_deviceId,
-				    success(res) {
+				    complete(res) {
 				      console.log('device services:', res.services)
 					  
 					  uni.getBLEDeviceCharacteristics({
@@ -116,7 +122,10 @@ function start_scan_ble()
 					    deviceId:ble_deviceId,
 					    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
 					    serviceId:SERVICE_UUID,
-					    success(res) {
+						fail(res) {
+							console.log(res)
+						},
+					    complete(res) {
 					      console.log('device getBLEDeviceCharacteristics:', res.characteristics)
 						  uni.notifyBLECharacteristicValueChange({
 						    state: true, // 启用 notify 功能
@@ -132,7 +141,7 @@ function start_scan_ble()
 						    success(res) {
 						  	console.log('notifyBLECharacteristicValueChange success', res.errMsg)
 						  	ble_state=2;
-							stop_scan_ble();
+							
 						    }
 						  })
 					    }
@@ -149,7 +158,7 @@ function start_scan_ble()
 	uni.onBLEConnectionStateChange(function (res) {
 	  // 该方法回调中可以用于处理连接意外断开等异常情况
 	  console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`)
-	  if(res.connected==false)
+	  if(res.connected==false &&  ble_state==2)
 	  {
 		  ble_state=0;
 	  }

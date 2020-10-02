@@ -17,8 +17,9 @@
 						<view class="like" @click="like_chong_lian">{{lan['Lan06']}}</view>
 					</view>
 				</view>
-				<view class="set-food-mode" v-show="pop_show==2">
+				<view class="set-food-mode" v-show="pop_show==2" @touchmove.stop.prevent="moveHandle">
 					<view class="d-title">{{food_name}}</view>
+					<view class="detail">具体时间会以饭量多少有所调整</view>
 					<view class="d-content">
 						<view class="yong-shi">约{{use_minute}}分钟</view>
 						<view class="yuyue">							
@@ -89,7 +90,7 @@
 			</view>
 			
 		</view>
-		<view class="cup-set" :class="[ble_state != 2 ? 'cup-set-disabled':'']" >
+		<view class="cup-set" :class="[ble_state != 2 ? 'cup-set-disabled':'']"  >
 			<view class="cup-set-title" >{{lan['Lan10']}}</view>
 			<view class="cup-set-container">
 				
@@ -179,7 +180,6 @@
 <script>
 	import loading from "../loading/loading.vue";
 	import lan_data from "../../static/language/language.js";
-	//import VConsole from "../../static/vconsole.min.js"
 	import connect_ble from "../../js/connect_ble.js";  
 	import login from "../../js/login.js";
 	
@@ -203,6 +203,7 @@
 				[12,'保温',480]
 				];
 	var current_shi_pu=0;
+	var select_shi_pu=0;
 	var is_auto_bao_wen=0;
 	export default { 
 		components: {
@@ -321,7 +322,7 @@
 				t1.setTime(t1.getTime() + ((js_arr[4]<<8)+ js_arr[5])*60000);
 				console.log(t1);
 			    this.kai_fan_shi_jian=t1.getHours() + ':' + t1.getMinutes();
-				this.dang_qian_shi_pu=shi_pu[current_shi_pu];
+				this.dang_qian_shi_pu=shi_pu[current_shi_pu][1];
 				
 			},
 			shao_hou_retry(e){
@@ -369,11 +370,12 @@
 				console.log('this.yuyue_switch='+this.yuyue_switch)
 			},
 			On_set_food_mode(num){		
-				current_shi_pu=num;
+				select_shi_pu=num;
 				this.food_name=shi_pu[num][1];
 				this.use_minute=shi_pu[num][2];
 				this.pop_show=2;
 				this.check_time_vaild(this.use_minute,'今',0,0)
+				
 			},
 			auto_bao_wen(e){
 				console.log(e)
@@ -393,7 +395,7 @@
 			},
 			kai_shi(){
 				this.pop_show=0;
-				var work_time=shi_pu[current_shi_pu][2];
+				var work_time=shi_pu[select_shi_pu][2];
 				var wait_time=0;
 				if(this.yuyue_switch==1)
 				{
@@ -406,10 +408,10 @@
 					 t3.setUTCHours(this.time,this.minute);
 					 
 					 console.log( );				
-					 wait_time=(t3-t2)/60000-work_time+1;
+					 wait_time=(t3-t2)/60000-work_time;
 				}		
 				
-				 connect_ble.send_to_device([0xC8,0x01,current_shi_pu,work_time>>8,work_time&0xFF,
+				 connect_ble.send_to_device([0xC8,0x01,select_shi_pu,work_time>>8,work_time&0xFF,
 				 wait_time>>8,wait_time&0XFF,is_auto_bao_wen]);
 				
 			},
@@ -500,10 +502,18 @@
 		transition: all 0.3s;
 	}
 	.d-title{
-		height: 116.67rpx;
+		margin-top: 3.33vw;
+		height: 7.4vw;
 		width: 583.33rpx;
-		font-size: 41.67rpx;
-		line-height: 116.67rpx;
+		font-size: 5.56vw;
+		line-height: 7.4vw;
+		opacity: 0.9;
+	}
+	.detail{
+		font-size: 3.88vw;
+		text-align: left;
+		width: 583.33rpx;
+		opacity: 0.6;
 	}
 	.please{
 		margin-bottom: 1.5rpx;
@@ -533,6 +543,7 @@
 		color: #007DFF;
 		margin-top: 52.60rpx;
 		margin-bottom: 36rpx;
+		align-items: center;
 	}
 	.chongshi{
 		height: 50rpx;
@@ -556,6 +567,8 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-top: 20rpx;
+		font-size: 4.44vw;
+		opacity: 0.9;
 	}
 	.yuyue-contain{
 		display: flex;
@@ -565,8 +578,9 @@
 	.yong-shi{
 		display: flex;
 		justify-content: center;
-		font-size: 41.67rpx;
+		font-size: 5vW;
 		color: #FF7500;
+		margin-top: 4.44vw;
 	}
 	.yuyue_time{
 		color: #FF7500;
@@ -633,7 +647,7 @@
 	.logo {
 		height: 37.5rpx;
 		width: 145.83rpx;
-		background-image:url(../../static/xxhdpi/logo.png);
+		background-image:url(../../static/dianfanbao/huotian.png);
 		background-size:cover;
 	}
 	.qiehuan{
@@ -754,7 +768,7 @@
 		justify-content: center;
 		align-items: center;
 		border-radius: 50%;
-		box-shadow: 0 6.25rpx 12.5rpx 0 rgba(0,0,0,0.2);
+		box-shadow: 0 0.28vw 0.56vw rgba(0,0,0,0.25);
 	}
 	.stop-img image{
 		background-image:url(../../static/stop.png);

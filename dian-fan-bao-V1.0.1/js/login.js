@@ -28,8 +28,8 @@ var user_info={
 function get_storage_user_info(){
 	try {
 	  var value = uni.getStorageSync('user_info')
-	  if (value.inited==1) {
-	    user_info=value;
+	  if (value.inited==1 && value.htu_id>10000 && value.ht_token.length==32) {
+			user_info=value;		    
 	  }
 	  else{
 		set_storage_user_info();  
@@ -125,9 +125,13 @@ function user_regist(){
 				    },
 					success (res) {
 						//console.log(res)
-						user_info.htu_id=res.data.htu_id;
-						user_info.ht_token=res.data.ht_token;
-						request_binded_device();						
+						if(res.data.errCode==0)
+						{
+							user_info.htu_id=res.data.htu_id;
+							user_info.ht_token=res.data.ht_token;
+							user_info.registed=1;
+							request_binded_device();
+						}							
 					}
 				  })
 	            },
@@ -151,10 +155,14 @@ function user_regist(){
 						
 					},
 					success (res) {
-						//console.log(res)
-						user_info.htu_id=res.data.htu_id;
-						user_info.ht_token=res.data.ht_token;	
-						request_binded_device();
+						if(res.data.errCode==0)
+						{
+							user_info.htu_id=res.data.htu_id;
+							user_info.ht_token=res.data.ht_token;
+							user_info.registed=1;
+							request_binded_device();
+						}	
+						
 					}
 				  })
 				},
@@ -169,7 +177,7 @@ function user_regist(){
 
 function request_binded_device(){
 	uni.request({
-	  url: 'http://server.huotiantech.com/device/get_binded_device.php',
+	  url: 'https://server.huotiantech.com/device/get_binded_device.php',
 	  data: {
 		htu_id:user_info.htu_id,
 		ht_token:user_info.ht_token
@@ -188,7 +196,7 @@ function request_binded_device(){
 			{
 				
 			}		
-			user_info.registed=1;
+			user_info.waiting=0;
 			set_storage_user_info();
 		}
 	})
@@ -199,7 +207,7 @@ function get_binded_device(){
 function bind_device(htd_id){
 	user_info.waiting=1;
 	uni.request({
-	  url: 'http://server.huotiantech.com/device/bind_device.php',
+	  url: 'https://server.huotiantech.com/device/bind_device.php',
 	  data: {
 		htd_id:htd_id,
 		htu_id:user_info.htu_id,
@@ -214,7 +222,7 @@ function bind_device(htd_id){
 function delete_device(htd_id)
 {
 	uni.request({
-	  url: 'http://server.huotiantech.com/device/unbind_device.php',
+	  url: 'https://server.huotiantech.com/device/unbind_device.php',
 	  data: {
 		htd_id:htd_id,
 		htu_id:user_info.htu_id,

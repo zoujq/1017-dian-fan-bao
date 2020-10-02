@@ -39,10 +39,15 @@
 				<view class="items">
 					{{item.p_name}}
 				</view>
-			</view>
-			
+			</view>		
+		</view>
+		
+		<view class="empty" v-if="device_arr.length==0">
+			<image src="../../static/kong_xiang_zi.png"></image>
+			<view>打开蓝牙，靠近可发现新设备...</view> 
 			
 		</view>
+		
 		
 	</view>
 </template>
@@ -59,6 +64,7 @@
 	var device_list_num=0;
 	var ble_inited=0;
 	var del_htd_id='';
+	var waiting_count=0;
 	export default {
 		data() {		
 			return {
@@ -72,10 +78,10 @@
 		onLoad(){
 			login.get_storage_user_info();
 		},
-		onShow(){
-			loop_id=setInterval(this.loop, 1000, '');
+		onShow(){			
 			ble_inited=0;
 			this.device_arr=login.get_binded_device();
+			loop_id=setInterval(this.loop, 1000, '');			
 		},
 		onHide(){
 			clearInterval(loop_id );
@@ -84,12 +90,18 @@
 		methods: {
 			loop(){
 				count++;
+				console.log('d1');
 				if(log_check==0)
 				{
 					user_info=login.get_user_info();
-					// console.log(user_info);
+					console.log(user_info);
 					if(user_info.waiting==1)
 					{
+						if(waiting_count++>8)
+						{
+							waiting_count=0;
+							user_info.waiting=0;
+						}
 						return;
 					}
 					if(user_info.loged==0 )
@@ -100,9 +112,11 @@
 
 					if(user_info.registed==0)
 					{
+						console.log('user_info.registed==0');
 						this.scope_userInfo=0;	
 						return;
 					}
+					login.request_binded_device();
 					log_check=1;
 				}	
 				if(device_list_num!=login.get_binded_device().length)
@@ -468,6 +482,22 @@
 		font-size: 4vw;
 		margin-top: 2.22vw;
 	}
-	
-	
+	.empty{
+		height:70vw;
+		width: 80vw;
+		opacity: 0.1;
+		font-size: 4.44vw;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+	}
+	.empty image{
+		margin-top: 5vw;
+		height:50vw;
+		width: 50vw;
+		margin-bottom: 10vw;
+	}
+
 </style>

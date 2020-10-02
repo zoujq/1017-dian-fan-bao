@@ -1,7 +1,7 @@
 <template>	
 	<view class="content" >
-		<view class="popup-lalay" :class="[pop_show]">
-			<view class="dialog-connect-fail"  >
+		<view class="popup-lalay" v-show="pop_show!=0" @touchmove.stop.prevent="moveHandle">
+			<view class="dialog-connect-fail" v-show="pop_show==1" >
 				<view class="d-title">{{lan['Lan01']}}</view>
 				<view class="d-content">
 					<view class="please">{{lan['Lan02']}}</view>
@@ -16,76 +16,86 @@
 					<view class="like" @click="like_chong_lian">{{lan['Lan06']}}</view>
 				</view>
 			</view>
+			<view class="set-food-mode" v-show="pop_show==2" @touchmove.stop.prevent="moveHandle">
+				<view class="d-title1">饮水提醒</view>
+				<view class="detail">设置每天提醒喝水杯数</view>
+				<view class="d-content1">	
+					<picker-view   indicator-class="pick-select" mask-class='mask-c'  value="0" @change="notice_change">
+						<picker-view-column>
+							<view  class="item"  v-for="(item,index) in notice_mode" :key="index">{{item}} </view>
+						</picker-view-column>						
+					</picker-view>				
+				</view>
+				<view class="d-footer-container">
+					<view class="chongshi" @click="qu_xiao">取消</view>
+					<view class="line"></view>
+					<view class="like" @click="que_ding_notice">确定</view>
+				</view>
+			</view>
+			<view class="set-food-mode" v-show="pop_show==3" @touchmove.stop.prevent="moveHandle">
+				<view class="d-title1">灯光时长</view>
+				<view class="detail">设置触摸后温度显示时长</view>
+				<view class="d-content1">	
+					<picker-view   indicator-class="pick-select" mask-class='mask-c'  value="0" @change="light_change">
+						<picker-view-column>
+							<view  class="item"  v-for="(item,index) in light_mode" :key="index">{{item}}S</view>
+						</picker-view-column>						
+					</picker-view>				
+				</view>
+				<view class="d-footer-container">
+					<view class="chongshi" @click="qu_xiao">取消</view>
+					<view class="line"></view>
+					<view class="like" @click="que_ding_light">确定</view>
+				</view>
+			</view>
 		</view>
-		<view class="error-notice" :class="[ (errcode & 7) != 0 ? 'error-notice-show' : '']">
+		<view class="error-notice" v-show="ble_state == 2 && battery<15 && charging==0">
 			<image class="error-notice-img" ></image>
 			<view class="notic-text">
-			{{(errcode & 1) ? lan['Lan07'] : (errcode & 2) ? lan['Lan33'] :  (errcode & 4) ? lan['Lan32'] : ''}}</view>
+			电量过低，请及时充电！</view>
 		</view>
 		<image class="idimg" src="../../static/shuibei/jiuzan-m.png"></image>
 		<image class="logo" ></image>
 		
 		<view class="cup-state" >
 			<view class="connect-state" >
-				{{ble_state==0 ? '未连接' : ble_state==1 ? '连接中...' : work_mode==0 ? lan['Lan26'] : work_mode==1 ? lan['Lan28'] : 
-				work_mode==2 ? lan['Lan27'] : work_mode==3 ? lan['Lan29'] :  work_mode==4 ? lan['Lan26'] : ''}}
+				{{ble_state==0 ? '未连接' : ble_state==1 ? '连接中...' : '已连接'}}
 			</view>
 			<view class="temp-state" :class="[ble_state == 2 ? 'temp-state-show' : '']">
 				<view class="temp-num">
-					<view class="temp-num-v" >{{temp}}</view>
+					<view class="temp-num-v" :style="{color:temp<30? '#007DFF' : temp<50? '#FFBF00' : '#FA2A2D' }" >{{temp}}</view>
 					<view class="temp-num-c" >℃</view>
 				</view>
 				<view class="temp-shuiwen" >{{lan['Lan09']}}</view>
 				
 			</view>
 			<view class="state-con">
-				<view class="loading-state" :class="[ble_state == 1 ? 'loading-state-show' : '']" ><loading></loading></view>
-				<view class="battery-state" :class="[ble_state == 2 ? 'battery-state-show' : '']">
-					<view class="battery-container" :class="[battery <= 15 ? 'battery-low' : '']">
+				<view class="loading-state" v-show ="ble_state==1" ><loading></loading></view>
+				<view class="battery-state" v-show ="ble_state==2">
+					<view class="battery-container"  :class="[battery <= 15 ? 'battery-low' : '']">
 						<view class="battery-show" :class="[battery <= 15 ? 'battery-show-low':'']" v-bind:style="{width:(battery*31.25/100) + 'rpx'}"></view>
 					</view>
 					
 					<image class="charging" :class="[charging ? 'charging-show':'']"></image>
 					<view class="battrey_v" :class="[ battery <= 15 ? 'battrey_v-low':'']">{{battery}}%</view>
 				</view>
-				<view class="re-connect" :class="[ble_state == 0 ? 're-connect-show' : '']"  @click='re_connect'>{{lan['Lan31']}}</view>
+				<view class="re-connect" v-show="ble_state==0"  @click='re_connect'>立即重连</view>
 			</view>
 			
 		</view>
-		<view class="cup-set" :class="[ble_state != 2 ? 'cup-set-disabled':'']" >
-			<view class="cup-set-title" >{{lan['Lan10']}}</view>
-			<view class="cup-set-container">
-				<view class="cup-set-item"  @click="cup_set(45)">
-					<view class="set-icon" :class="[temp_set==45 ? 'set-icon-pressed' : '']">
-						<image class="set-icon-ic_water" :class="[temp_set==45 ? 'set-icon-ic_water_pressed' : '']"></image>
-					</view>
-					<view class="item-name" >{{lan['Lan11']}}</view>
-				</view>
-				<view class="cup-set-item" @click="cup_set(50)">
-					<view class="set-icon" :class="[temp_set==50 ? 'set-icon-pressed' : '']">
-						<image class="set-icon-ic_milk" :class="[temp_set==50 ? 'set-icon-ic_milk_pressed' : '']"></image>
-					</view>
-					<view class="item-name" >{{lan['Lan12']}}</view>
-				</view>
-				<view class="cup-set-item" @click="cup_set(55)">
-					<view class="set-icon" :class="[temp_set==55 ? 'set-icon-pressed' : '']">
-						<image class="set-icon-ic_blacktea" :class="[temp_set==55 ? 'set-icon-ic_blacktea_pressed' : '']"></image>
-					</view>
-					<view class="item-name" >{{lan['Lan13']}}</view>
-				</view>
-				<view class="cup-set-item" @click="cup_set(60)">
-					<view class="set-icon" :class="[temp_set==60 ? 'set-icon-pressed' : '']">
-						<image class="set-icon-ic_greentea" :class="[temp_set==60 ? 'set-icon-ic_greentea_pressed' : '']"></image>
-					</view>
-					<view class="item-name" >{{lan['Lan14']}}</view>
-				</view>
-				<view class="cup-set-item" @click="cup_set(65)">
-					<view class="set-icon" :class="[temp_set==65 ? 'set-icon-pressed' : '']">
-						<image class="set-icon-ic_coffee" :class="[temp_set==65 ? 'set-icon-ic_coffee_pressed' : '']"></image>
-					</view>
-					<view class="item-name" >{{lan['Lan15']}}</view>
-				</view>
+		<view class="cup-set"  :class="[ble_state != 2 ? 'cup-set-disabled':'']" >
+			<view class="water-notice" @click="set_notice">
+				<view class="notice-text">饮水提醒</view>
+				<image class="notice-icon" :class="[notice_value==0 ? 'not-notice':'']"></image>
 			</view>
+			<view class="light-set" @click="set_light">
+				<view class="light-text">
+					<view class="light-title">灯光时长</view>
+					<view class="light-value">{{light_value}}秒</view>
+				</view>
+				<image class="light-icon"></image>
+			</view>
+			
 		</view>
 	</view>
 </template>
@@ -93,46 +103,103 @@
 <script>
 	import loading from "../loading/loading";
 	import lan_data from "../../static/language/language.js";
-	// import VConsole from "../../static/vconsole.min.js"
-	import ble from "../../js/connect_ble.js";  
+	import connect_ble from "../../js/connect_ble.js";
+	import login from "../../js/login.js";
 	
 	
 	var main_count=0;
 	var re_connect_counter=16;
-
+	var loop_id=-1;
+	var light_value;
+	var notice_value;
 	export default { 
 		components: {
 			loading
 		},
 		data() {
 			return {
-				pop_show: '',
-				lan:'zh-cn' ,
-				ble_state:0,
+				pop_show: 0,
+				lan:lan_data.cn ,
+				ble_state:2,
 				temp:0,
-				temp_set:0,
-				work_mode:0,
 				battery:0,				
 				charging:0,
 				errcode:0,
+				notice_mode:['关闭提醒','健康饮水(6杯)','养生饮水(8杯)','美容饮水(10杯)'],
+				light_mode:[2,3,4,5,6,7,8,9,10],
+				light_value:3,
+				notice_value:0,
+				
 			}
 		},
-		onLoad() {
-
-			// this.ble_state=1;
-
-			
+		onUnload() {
+			clearInterval(loop_id );
+			connect_ble.stop_ble();			
 		},
 		onHide(){
-			// this.de_init_index();
-			// console.log('index onHide');
+			clearInterval(loop_id );
+			connect_ble.stop_ble();
+			console.log('index onHide');
+			
 		},
 		onShow(){
-			// this.init_index();	
-			// this.ble_state=1;
-			// console.log('index onShow');
+			loop_id= setInterval(this.loop, 1000, '');
+			this.ble_state=1;
+			console.log('index onShow');
+			connect_ble.start_ble();
+			re_connect_counter=0;
+			connect_ble.set_on_received_data_callback(this.on_received_data);
 		},
 		methods: {
+			loop(){
+				console.log('p2:'+re_connect_counter);				
+				if(this.ble_state==1 && re_connect_counter<30)
+				{
+					re_connect_counter++;	
+					if(re_connect_counter%8==0){
+						connect_ble.stop_ble();
+						connect_ble.start_ble();
+					}
+					if(re_connect_counter==30)
+					{
+						this.ble_state=0;
+						this.pop_show=1;
+					}
+				}
+				if(connect_ble.get_ble_state()==0 && this.ble_state==1)
+				{
+					connect_ble.stop_ble();
+					connect_ble.start_ble();
+				}
+				if(connect_ble.get_ble_state()==0 && this.ble_state==2)
+				{
+					this.ble_state=1;
+					this.food_mode=0;
+					connect_ble.stop_ble();
+					connect_ble.start_ble();
+				}
+				if(this.ble_state!=2 && connect_ble.get_ble_state()==2)
+				{
+					this.ble_state=2;
+					re_connect_counter=0;
+				}
+				if(this.ble_state==2)
+				{
+					this.check_cup_state();
+				}			
+			},
+			on_received_data(js_arr){
+				console.log(js_arr);
+				if(js_arr[0]!=0xC8 || js_arr[1]!=3){
+					return;
+				}
+				this.temp=js_arr[2];
+				this.battery=js_arr[3];
+				this.charging=js_arr[4];
+				this.notice_value=js_arr[5];
+				this.light_value=js_arr[6];			
+				
+			},
 			shao_hou_retry(e){
 				this.pop_show='';
 			},
@@ -141,103 +208,48 @@
 				this.re_connect();
 
 			},
-			cup_set(i){
-				this.temp_set=i;				
-				console.log(i);
-				ble.cup_set_temp(i);
-			},
 			re_connect(){
 				this.ble_state=1;
 				re_connect_counter=0;
-				ble.stop_ble();
-				ble.start_ble()
-			},
-			index_loop(){
-				console.log('index'+main_count++);
-				
-				if(this.ble_state==1 && re_connect_counter<30)
-				{
-					re_connect_counter++;	
-					if(re_connect_counter%8==0){
-						ble.stop_ble();
-						ble.start_ble();
-					}
-					if(re_connect_counter==30)
-					{
-						this.ble_state=0;
-						this.pop_show='popup-lalay-show';
-					}
-				}
-				if(ble.get_ble_state()==0 && this.ble_state==1)
-				{
-					ble.stop_ble();
-					ble.start_ble();
-				}
-				if(ble.get_ble_state()==0 && this.ble_state==2)
-				{
-					this.ble_state=1;
-					this.temp_set=0;
-					ble.stop_ble();
-					ble.start_ble();
-				}
-				if(this.ble_state!=2 && ble.get_ble_state()==2)
-				{
-					this.ble_state=2;
-					re_connect_counter=0;
-				}
-				if(this.ble_state==2)
-				{
-					this.check_cup_state();
-				}
-				
-				
-			},
-			de_init_index()	{
-				clearInterval(getApp().globalData.index_loop_id );
-				getApp().globalData.index_loop_id =-1;
-			},
-			init_index(){
-				if(getApp().globalData.index_loop_id ==-1)
-				{
-					getApp().globalData.index_loop_id = setInterval(this.index_loop, 1000, '');
-				}	
-			},
+				connect_ble.stop_ble();
+				connect_ble.start_ble()
+			},			
 			check_cup_state(){
-				var sta=ble.get_cup_state();
-				if(sta.temp != this.temp)
-				{
-					this.temp=sta.temp;
-				}
-				if(sta.temp_set != this.temp_set)
-				{
-					this.temp_set=sta.temp_set;
-				}
-				if(sta.work_mode != this.work_mode)
-				{
-					this.work_mode=sta.work_mode;
-				}
-				if(sta.battery != this.battery)
-				{
-					this.battery=sta.battery;
-				}
-				if(sta.errcode != this.errcode)
-				{
-					this.errcode=sta.errcode;					
-					if(sta.errcode & 0x08)
-					{
-						this.charging=1;
-					}
-					else{
-						this.charging=0;
-					}
-					
-				}
+				connect_ble.send_to_device([0xC8,0x03]);
 			},
 			t1(){
 				uni.redirectTo({
 				    url: '../connect/connect'
 				});
-			}		
+			},
+			qu_xiao(){
+				this.pop_show=0;
+			},
+			notice_change(e){
+				const val = e.detail.value
+				notice_value=val[0];
+			},
+			light_change(e){
+				const val = e.detail.value
+				light_value=val[0]+2;
+			},
+			que_ding_light(){
+				this.pop_show=0;
+				connect_ble.send_to_device([0xC8,0x02,light_value]);
+			},
+			que_ding_notice(){
+				this.pop_show=0;
+				connect_ble.send_to_device([0xC8,0x01,notice_value]);
+			},
+			set_notice(){
+				this.pop_show=2;
+			},
+			set_light(){
+				this.pop_show=3;
+			},
+			moveHandle(){
+				
+			}
 			
 		}
 	}
@@ -258,14 +270,74 @@
 		height: 100vh;
 		width: 100vw;
 		z-index: 2;
-		display: none;
 		background-color: rgba(0,0,0,0.2);
-		justify-content: center;		
+		justify-content: center;	
+		display: flex;
 	}
-	.popup-lalay-show{
-		display: flex;		
+	.d-title1{
+		margin-top: 3.33vw;
+		height: 7.4vw;
+		width: 583.33rpx;
+		font-size: 5.56vw;
+		line-height: 7.4vw;
+		opacity: 0.9;
 	}
-
+	.detail{
+		font-size: 4.44vw;
+		text-align: left;
+		width: 583.33rpx;
+		opacity: 0.6;
+		margin-top: 0.5vw;
+	}
+	.d-content1{
+		height: 55.55vw;
+		width: 38.89vw;
+		font-size: 4.44vw;
+		/* background-color: #007AFF; */
+		margin-top: 1.67vw;
+	
+	}
+	.set-food-mode{
+		height: 600rpx;
+		width: 683.33rpx;
+		background-color: #FFFFFF;
+		bottom: 33.33rpx;
+		position: fixed;
+		border-radius: 33.33rpx;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+	}
+	.d-footer-container{
+		height: 50rpx;
+		width: 583.33rpx;
+		display: flex;
+		justify-content: space-between;
+		flex-direction: row;
+		font-size: 33.33rpx;
+		color: #007DFF;
+		margin-top: 100rpx;
+		margin-bottom: 36rpx;
+	}
+	picker-view {
+	    width: 38.89vw;
+	    height: 43vw;
+		padding: 0;
+	}
+	picker-view .item{
+		width: 38.89vw;
+		height: 10vw;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 5vw;
+	}
+	.pick-select{
+		height: 15.7vw;
+		line-height: 15.7vw;
+		font-size: 5vw;
+		color: #007DFF;
+	}
 	.dialog-connect-fail{
 		height: 392.71rpx;
 		width: 683.33rpx;
@@ -276,7 +348,6 @@
 		display: flex;
 		align-items: center;
 		flex-direction: column;
-		transition: all 3s;
 	}
 	.d-title{
 		height: 116.67rpx;
@@ -287,10 +358,12 @@
 	.please{
 		margin-bottom: 1.5rpx;
 	}
+	
 	.d-content{
 		height: 142.71rpx;
 		width: 583.33rpx;
 		font-size: 33.33rpx;
+
 	}
 	.d-footer-container{
 		height: 50rpx;
@@ -306,16 +379,19 @@
 		height: 50rpx;
 		width: 266.67rpx;
 		text-align: center;
+		line-height: 50rpx;
 	}
 	.line{
-		border-right: 1.04rpx solid rgba(0,0,0,0.20);
+		border-right: 1px solid #e5e5e5;
 		height: 50rpx;
-		width: 0.01rpx;
+		width: 1px;
+		transform: scaleX(0.5);
 	}
 	.like{
 		height: 50rpx;
 		width: 266.67rpx;
 		text-align: center;
+		line-height: 50rpx;
 		/* background-color: #007AFF; */
 	}
 
@@ -323,8 +399,8 @@
 		width: 750rpx;
 		height: 100rpx;
 		background-color:rgba(251,42,45,0.05);
-		display: none;
 		align-items: center;
+		display: flex;
 	}
 
 	.error-notice-img{
@@ -352,9 +428,9 @@
 	}
 
 	.logo {
-		height: 37.5rpx;
+		height: 36rpx;
 		width: 145.83rpx;
-		background-image:url(../../static/xxhdpi/logo.png);
+		background-image:url(../../static/shuibei/jiuzan.png);
 		background-size:cover;
 	}
 	.cup-state{
@@ -406,7 +482,7 @@
 	.temp-num-v{
 		font-size:50rpx ;
 		font-weight: bold;
-		width: 56.25rpx;
+		/* width: 56.25rpx; */
 		height:66.66rpx;
 		color: #000;
 		margin-right:5rpx ;
@@ -431,15 +507,68 @@
 		opacity: 0.6;
 	}
 	.cup-set {
+		margin-top: 2.22vw;
 		display: flex;
-		height: 456.25rpx;
-		width: 683.33rpx;
-		background-color: #FFFFFF;
-		margin-top: 16.67rpx;
-		border-radius: 16.67rpx;
-		flex-direction: column;
-		align-items: center;
+		height: 17.78vw;
+		width: 91.11vw;
+		flex-direction: row;
+		justify-content: space-between;
 		
+	}
+	.water-notice{
+		height: 17.78vw;
+		width: 44.44vw;
+		background-color: #FFF;
+		box-shadow: 0.35vw 0.69vw 1.39vw 0 rgba(0,0,0,0.05);
+		border-radius: 2.22vw;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.notice-text{
+		font-size: 4.44vw;
+		margin-left: 6.67vw;
+	}
+	.notice-icon{
+		background-image: url(../../static/shuibei/ic_tishi.png);
+		background-size: cover;
+		height: 6.11vw;
+		width: 5.29vw;
+		margin-right: 7.36vw;
+		
+	}
+	.not-notice{
+		background-image: url(../../static/shuibei/img_tixing.png);
+	}
+	.light-set{
+		height: 17.78vw;
+		width: 44.44vw;
+		background-color: #FFF;
+		box-shadow: 0.35vw 0.69vw 1.39vw 0 rgba(0,0,0,0.05);
+		border-radius: 2.22vw;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.light-text{
+		margin-left: 6.67vw;
+		
+	}
+	.light-title{
+		font-size: 4.44vw;
+	}
+	.light-value{
+		font-size: 3.33vw;
+		color: #007DFF;
+	}
+	.light-icon{
+		background-image: url(../../static/shuibei/ic_zhishideng_pre.png);
+		background-size: cover;
+		height: 6.11vw;
+		width: 6.11vw;
+		margin-right: 6.94vw;
 	}
 	.cup-set-disabled{
 		 pointer-events: none;
@@ -451,28 +580,26 @@
 		display: flex;
 		justify-content: flex-end;	
 		align-items:center;
+		flex-direction: row;
 	}
 	.loading-state{
-		height: 130.73rpx;
-		/* width: 130.73rpx; */
+		height:63rpx;
+		width: 63rpx;
 		/* background-color: #999999; */
-		display: none;
 		justify-content: flex-end;
 		align-items:center;
+		position: absolute;
+		top:643rpx;
+		right:83.6rpx;
 	}
-	.loading-state-show{
-		display: flex;
-	}
+
 	.battery-state{
 		height: 48.96rpx;
 		width: 182rpx;
 		/* background-color: #999999; */
-		display: none;
 		flex-direction: row;	
 		align-items: center;
 		justify-content: flex-end;	
-	}
-	.battery-state-show{
 		display: flex;
 	}
 	.battery-container
@@ -525,7 +652,6 @@
 		height: 40.63rpx;
 		width: 132.3rpx;
 		justify-content: flex-end;	
-		display: none;
 	}
 	.re-connect-show{
 		display: flex;
@@ -573,38 +699,7 @@
 		width: 56rpx;
 		background-size: cover;
 	}
-	.set-icon-ic_water{
-		background-image: url(../../static/xxhdpi/ic_water.png);		
-	}
-	.set-icon-ic_water_pressed{
-		background-image: url(../../static/xxhdpi/ic_water_pressed.png);		
-	}
-	.set-icon-ic_milk{
-		background-image:url(../../static/xxhdpi/ic_milk.png);		
-	}
-	.set-icon-ic_milk_pressed{
-		background-image:url(../../static/xxhdpi/ic_milk_pressed.png);		
-	}
-	.set-icon-ic_blacktea{
-		background-image:url(../../static/xxhdpi/ic_blacktea.png);		
-	}
-	.set-icon-ic_blacktea_pressed{
-		background-image:url(../../static/xxhdpi/ic_blacktea_pressed.png);		
-	}
 
-	.set-icon-ic_greentea{
-		background-image:url(../../static/xxhdpi/ic_greentea.png);		
-	}
-	.set-icon-ic_greentea_pressed{
-		background-image:url(../../static/xxhdpi/ic_greentea_pressed.png);		
-	}
-
-	.set-icon-ic_coffee{
-		background-image:url(../../static/xxhdpi/ic_coffee.png);		
-	}
-	.set-icon-ic_coffee_pressed{
-		background-image:url(../../static/xxhdpi/ic_coffee_pressed.png);		
-	}
 	.item-name
 	{
 		height: 32.81rpx;

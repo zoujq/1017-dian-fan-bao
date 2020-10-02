@@ -397,10 +397,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
+
 var _loading = _interopRequireDefault(__webpack_require__(/*! ../loading/loading */ 27));
 var _language = _interopRequireDefault(__webpack_require__(/*! ../../static/language/language.js */ 34));
-
-var _connect_ble = _interopRequireDefault(__webpack_require__(/*! ../../js/connect_ble.js */ 35));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
+var _connect_ble = _interopRequireDefault(__webpack_require__(/*! ../../js/connect_ble.js */ 35));
+var _login = _interopRequireDefault(__webpack_require__(/*! ../../js/login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
 //
@@ -492,56 +502,58 @@ var _connect_ble = _interopRequireDefault(__webpack_require__(/*! ../../js/conne
 //
 //
 //
-// import VConsole from "../../static/vconsole.min.js"
-var main_count = 0;var re_connect_counter = 16;var _default = { components: { loading: _loading.default }, data: function data() {return { pop_show: '', lan: 'zh-cn', ble_state: 0, temp: 0, temp_set: 0, work_mode: 0, battery: 0, charging: 0, errcode: 0 };}, onLoad: function onLoad() {// this.ble_state=1;
-  }, onHide: function onHide() {// this.de_init_index();
-    // console.log('index onHide');
-  }, onShow: function onShow() {// this.init_index();	
-    // this.ble_state=1;
-    // console.log('index onShow');
-  }, methods: { shao_hou_retry: function shao_hou_retry(e) {this.pop_show = '';}, like_chong_lian: function like_chong_lian(e) {this.pop_show = '';this.re_connect();}, cup_set: function cup_set(i) {this.temp_set = i;console.log(i);_connect_ble.default.cup_set_temp(i);}, re_connect: function re_connect() {this.ble_state = 1;re_connect_counter = 0;_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}, index_loop: function index_loop() {console.log('index' + main_count++);if (this.ble_state == 1 && re_connect_counter < 30) {re_connect_counter++;if (re_connect_counter % 8 == 0) {_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (re_connect_counter == 30) {this.ble_state = 0;this.pop_show = 'popup-lalay-show';}}if (_connect_ble.default.get_ble_state() == 0 && this.ble_state == 1) {_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (_connect_ble.default.get_ble_state() == 0 && this.ble_state == 2) {this.ble_state = 1;this.temp_set = 0;_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (this.ble_state != 2 && _connect_ble.default.get_ble_state() == 2) {this.ble_state = 2;re_connect_counter = 0;}if (this.ble_state == 2) {this.check_cup_state();}}, de_init_index: function de_init_index() {clearInterval(getApp().globalData.index_loop_id);
-      getApp().globalData.index_loop_id = -1;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var main_count = 0;var re_connect_counter = 16;var loop_id = -1;var light_value;var notice_value;var _default = { components: { loading: _loading.default }, data: function data() {return { pop_show: 0, lan: _language.default.cn, ble_state: 2, temp: 0, battery: 0, charging: 0, errcode: 0, notice_mode: ['关闭提醒', '健康饮水(6杯)', '养生饮水(8杯)', '美容饮水(10杯)'], light_mode: [2, 3, 4, 5, 6, 7, 8, 9, 10], light_value: 3, notice_value: 0 };}, onUnload: function onUnload() {clearInterval(loop_id);_connect_ble.default.stop_ble();}, onHide: function onHide() {clearInterval(loop_id);_connect_ble.default.stop_ble();console.log('index onHide');}, onShow: function onShow() {loop_id = setInterval(this.loop, 1000, '');this.ble_state = 1;console.log('index onShow');_connect_ble.default.start_ble();re_connect_counter = 0;_connect_ble.default.set_on_received_data_callback(this.on_received_data);}, methods: { loop: function loop() {console.log('p2:' + re_connect_counter);if (this.ble_state == 1 && re_connect_counter < 30) {re_connect_counter++;if (re_connect_counter % 8 == 0) {_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (re_connect_counter == 30) {this.ble_state = 0;this.pop_show = 1;}}if (_connect_ble.default.get_ble_state() == 0 && this.ble_state == 1) {_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (_connect_ble.default.get_ble_state() == 0 && this.ble_state == 2) {this.ble_state = 1;this.food_mode = 0;_connect_ble.default.stop_ble();_connect_ble.default.start_ble();}if (this.ble_state != 2 && _connect_ble.default.get_ble_state() == 2) {this.ble_state = 2;re_connect_counter = 0;}if (this.ble_state == 2) {this.check_cup_state();}}, on_received_data: function on_received_data(js_arr) {console.log(js_arr);if (js_arr[0] != 0xC8 || js_arr[1] != 3) {return;}this.temp = js_arr[2];this.battery = js_arr[3];this.charging = js_arr[4];this.notice_value = js_arr[5];this.light_value = js_arr[6];}, shao_hou_retry: function shao_hou_retry(e) {this.pop_show = '';}, like_chong_lian: function like_chong_lian(e) {this.pop_show = '';this.re_connect();
     },
-    init_index: function init_index() {
-      if (getApp().globalData.index_loop_id == -1)
-      {
-        getApp().globalData.index_loop_id = setInterval(this.index_loop, 1000, '');
-      }
+    re_connect: function re_connect() {
+      this.ble_state = 1;
+      re_connect_counter = 0;
+      _connect_ble.default.stop_ble();
+      _connect_ble.default.start_ble();
     },
     check_cup_state: function check_cup_state() {
-      var sta = _connect_ble.default.get_cup_state();
-      if (sta.temp != this.temp)
-      {
-        this.temp = sta.temp;
-      }
-      if (sta.temp_set != this.temp_set)
-      {
-        this.temp_set = sta.temp_set;
-      }
-      if (sta.work_mode != this.work_mode)
-      {
-        this.work_mode = sta.work_mode;
-      }
-      if (sta.battery != this.battery)
-      {
-        this.battery = sta.battery;
-      }
-      if (sta.errcode != this.errcode)
-      {
-        this.errcode = sta.errcode;
-        if (sta.errcode & 0x08)
-        {
-          this.charging = 1;
-        } else
-        {
-          this.charging = 0;
-        }
-
-      }
+      _connect_ble.default.send_to_device([0xC8, 0x03]);
     },
     t1: function t1() {
       uni.redirectTo({
         url: '../connect/connect' });
+
+    },
+    qu_xiao: function qu_xiao() {
+      this.pop_show = 0;
+    },
+    notice_change: function notice_change(e) {
+      var val = e.detail.value;
+      notice_value = val[0];
+    },
+    light_change: function light_change(e) {
+      var val = e.detail.value;
+      light_value = val[0] + 2;
+    },
+    que_ding_light: function que_ding_light() {
+      this.pop_show = 0;
+      _connect_ble.default.send_to_device([0xC8, 0x02, light_value]);
+    },
+    que_ding_notice: function que_ding_notice() {
+      this.pop_show = 0;
+      _connect_ble.default.send_to_device([0xC8, 0x01, notice_value]);
+    },
+    set_notice: function set_notice() {
+      this.pop_show = 2;
+    },
+    set_light: function set_light() {
+      this.pop_show = 3;
+    },
+    moveHandle: function moveHandle() {
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
