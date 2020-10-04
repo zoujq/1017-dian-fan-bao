@@ -1,6 +1,4 @@
-
 import wx_api from "./login.js";
-
 
 export default {  	
 	start_scan_ble,	
@@ -10,11 +8,18 @@ export default {
 	get_scan_device,
 	check_find_device,
 	stop_scan_ble,
+	get_ble_adapter
 }
 var find_device=0;
 var scan_device=[];
 var wait_http=0;
 var count=0;
+var ble_adapter=0;
+function get_ble_adapter(){
+	var t=ble_adapter;
+	ble_adapter=0;
+	return t;
+}
 function start_scan_ble()
 {
 	wait_http =0;
@@ -24,6 +29,10 @@ function start_scan_ble()
 	    console.log(res)
 		uni.openBluetoothAdapter({
 		  complete(res) {
+		    if(res.errCode==10001)
+		    {
+			  ble_adapter=-1;
+		    }
 		    console.log(res)
 			uni.startBluetoothDevicesDiscovery({
 			  allowDuplicatesKey:true,
@@ -39,7 +48,7 @@ function start_scan_ble()
 	uni.onBluetoothDeviceFound(function(res) {
 	  var devices = res.devices;
 	  var d_hex=ab2hex(devices[0].advertisData);
-	  if(count++>30)
+	  if(count++>300) 
 	  {
 		  console.log('fd');
 		  count=0;
@@ -86,16 +95,20 @@ function stop_scan_ble()
 function ble_rescan()
 {
 	wait_http =0;
-	uni.stopBluetoothDevicesDiscovery({
-	  success (res) {
-	    console.log(res)
+	uni.closeBluetoothAdapter({
+	  complete(res) {
+	    // console.log(res)
 		uni.openBluetoothAdapter({
-		  success (res) {
-		    console.log(res)
+		  complete(res) {
+			if(res.errCode==10001)
+			{
+				ble_adapter=-1;
+			}
+		    // console.log(res)
 			uni.startBluetoothDevicesDiscovery({
 			  allowDuplicatesKey:true,
 			  success (res) {
-			    console.log(res)
+			    // console.log(res)
 			  }
 			})
 		  }

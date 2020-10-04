@@ -35,6 +35,10 @@
             "path" : "pages/p10001/p10001",
             "style" : {}
         }
+        ,{
+            "path" : "pages/login/login",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

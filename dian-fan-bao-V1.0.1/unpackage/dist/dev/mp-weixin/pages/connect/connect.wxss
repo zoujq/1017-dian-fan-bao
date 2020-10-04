@@ -145,7 +145,8 @@
 	margin-top: 213.02rpx;
 	height: 75rpx;
 	width: 375rpx;
-	border-radius: 37.5rpx;
+	-webkit-border-radius: 37.5rpx;
+	        border-radius: 37.5rpx;
 	background: rgba(0,0,0,0.05);
 	line-height: 75rpx;
 	text-align: center;

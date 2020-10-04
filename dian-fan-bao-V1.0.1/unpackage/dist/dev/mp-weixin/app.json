@@ -6,7 +6,8 @@
     "pages/loading/loading",
     "pages/test/test",
     "pages/p10002/p10002",
-    "pages/p10001/p10001"
+    "pages/p10001/p10001",
+    "pages/login/login"
   ],
   "subPackages": [],
   "window": {
@@ -15,5 +16,6 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F7F7F7"
   },
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap44.json"
 }

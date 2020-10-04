@@ -152,7 +152,10 @@
 		},
 		methods: {
 			loop(){
-				console.log('p2:'+re_connect_counter);				
+				if(re_connect_counter%9==0)
+				{
+					console.log('p2:'+re_connect_counter);	
+				}							
 				if(this.ble_state==1 && re_connect_counter<30)
 				{
 					re_connect_counter++;	

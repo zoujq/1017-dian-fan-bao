@@ -7,7 +7,8 @@
 .demo3 {
     width: 7rpx;
     height: 7rpx;
-    border-radius: 50%;
+    -webkit-border-radius: 50%;
+            border-radius: 50%;
     background: #D0D0D0;
     position: absolute;
 	animation: demo3 linear 1.2s infinite;
@@ -162,7 +163,8 @@
 		background-color: #FFFFFF;
 		bottom: 33.33rpx;
 		position: fixed;
-		border-radius: 33.33rpx;
+		-webkit-border-radius: 33.33rpx;
+		        border-radius: 33.33rpx;
 		display: -webkit-box;
 		display: -webkit-flex;
 		display: flex;
@@ -223,7 +225,8 @@ picker-view .item{
 		background-color: #FFFFFF;
 		bottom: 33.33rpx;
 		position: fixed;
-		border-radius: 33.33rpx;
+		-webkit-border-radius: 33.33rpx;
+		        border-radius: 33.33rpx;
 		display: -webkit-box;
 		display: -webkit-flex;
 		display: flex;
@@ -331,8 +334,10 @@ picker-view .item{
 		height: 183.33rpx;
 		background-color: #FFFFFF;
 		margin-top:20.83rpx ;
-		box-shadow: 0 6.25rpx 12.5rpx 0 rgba(0,0,0,0.03);
-		border-radius: 16.67rpx;
+		-webkit-box-shadow: 0 6.25rpx 12.5rpx 0 rgba(0,0,0,0.03);
+		        box-shadow: 0 6.25rpx 12.5rpx 0 rgba(0,0,0,0.03);
+		-webkit-border-radius: 16.67rpx;
+		        border-radius: 16.67rpx;
 		display: -webkit-box;
 		display: -webkit-flex;
 		display: flex;
@@ -439,8 +444,10 @@ picker-view .item{
 		height: 17.78vw;
 		width: 44.44vw;
 		background-color: #FFF;
-		box-shadow: 0.35vw 0.69vw 1.39vw 0 rgba(0,0,0,0.05);
-		border-radius: 2.22vw;
+		-webkit-box-shadow: 0.35vw 0.69vw 1.39vw 0 rgba(0,0,0,0.05);
+		        box-shadow: 0.35vw 0.69vw 1.39vw 0 rgba(0,0,0,0.05);
+		-webkit-border-radius: 2.22vw;
+		        border-radius: 2.22vw;
 		display: -webkit-box;
 		display: -webkit-flex;
 		display: flex;
@@ -473,8 +480,10 @@ picker-view .item{
 		height: 17.78vw;
 		width: 44.44vw;
 		background-color: #FFF;
-		box-shadow: 0.35vw 0.69vw 1.39vw 0 rgba(0,0,0,0.05);
-		border-radius: 2.22vw;
+		-webkit-box-shadow: 0.35vw 0.69vw 1.39vw 0 rgba(0,0,0,0.05);
+		        box-shadow: 0.35vw 0.69vw 1.39vw 0 rgba(0,0,0,0.05);
+		-webkit-border-radius: 2.22vw;
+		        border-radius: 2.22vw;
 		display: -webkit-box;
 		display: -webkit-flex;
 		display: flex;
@@ -584,7 +593,8 @@ picker-view .item{
 		height: 16rpx;
 		width: 0rpx;
 		background-color: #1A1A1A;
-		border-radius: 2rpx;
+		-webkit-border-radius: 2rpx;
+		        border-radius: 2rpx;
 		margin-left: 5.2rpx;
 }
 .battery-show-low{
@@ -665,7 +675,8 @@ picker-view .item{
 .set-icon{
 		height: 78.65rpx;
 		width: 78.65rpx;
-		border-radius: 50%;
+		-webkit-border-radius: 50%;
+		        border-radius: 50%;
 		/* background-color: #4CD964; */
 		border:2.09rpx solid rgba(0,0,0,0.2);
 		display: -webkit-box;

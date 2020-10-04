@@ -1,32 +1,8 @@
 <template>
 	<view class="body">
-		<view class="popup-lalay" v-show="scope_userInfo==0"  @touchmove.stop.prevent="moveHandle">
-			<view class="dialog-content" >
-				<button  type="primary" open-type="getUserInfo" @click="getUserInfo" >微信授权登录 </button>
-			</view>
-		</view>
-		<view class="popup-lalay" v-show="find_new_device==1"  @touchmove.stop.prevent="moveHandle">
-			<view class="dialog-content" >
-				<view class="find_new">发现新设备</view>
-				<image :src="new_device.p_icon" class="new_img"></image>
-				<view class="new_name"> {{new_device.p_name}}</view>
-				<view class="new_buttx">
-					<view class="btn1" @click="no_bind">取消</view>
-					<view class="btn2" @click="bind(new_device.htd_id)">绑定</view>
-				</view>
-			</view>
-		</view>
-		<view class="popup-lalay" v-show="delete_deivce==1"  @touchmove.stop.prevent="moveHandle">
-			<view class="dialog-content" >
-				<view class="find_new">删除当前设备？</view>
-				<view class="new_buttx">
-					<view class="btn1" @click="cancel_delete">取消</view>
-					<view class="del_btn2" @click="sure_delete">删除</view>
-				</view>
-			</view>
-		</view>
 		<view class="title" >
-			<view class="title-name" @click="t2">设备</view>	
+			<view class="title-name" @click="t2">设备</view>
+				
 			<input class="search" placeholder="靠近可发现新设备" maxlength=15 />
 			<view class="tian-jia" @click="tian_jia"  open-type="getUserInfo">
 				<image src="../../static/saoyisao.png" class="tian-jia-img"></image>
@@ -48,13 +24,49 @@
 			
 		</view>
 		
-		
+		<uni-popup ref="getUserInfo_popup" type="bottom">
+			<view class="dialog-content" >
+				<button  type="primary" open-type="getUserInfo" @click="getUserInfo" >微信授权登录 </button>
+			</view>
+		</uni-popup> 
+		<uni-popup ref="find_new_popup" type="bottom">
+			<view class="dialog-content" >
+				<view class="find_new">发现新设备</view>
+				<image :src="new_device.p_icon" class="new_img"></image>
+				<view class="new_name"> {{new_device.p_name}}</view>
+				<view class="new_buttx">
+					<view class="btn1" @click="no_bind">取消</view>
+					<view class="btn2" @click="bind(new_device.htd_id)">绑定</view>
+				</view>
+			</view>
+		</uni-popup> 
+		<uni-popup ref="delete_device_popup" type="bottom">
+			<view class="dialog-content" >
+				<view class="find_new">删除当前设备？</view>
+				<view class="new_buttx">
+					<view class="btn1" @click="cancel_delete">取消</view>
+					<view class="del_btn2" @click="sure_delete">删除</view>
+				</view>
+			</view>
+		</uni-popup> 
+		<uni-popup ref="notice_open_ble_popup" type="center">
+			 <uni-popup-dialog type="error" title="请打开手机蓝牙!" :duration="2000" :before-close="true" 
+			 @close="close_open_ble_notice" @confirm="close_open_ble_notice"></uni-popup-dialog>
+		</uni-popup> 
+		<uni-popup ref="acount_login_popup" type="bottom" :maskClick="false">
+				<emailLogin></emailLogin>				
+		</uni-popup> 
+		<button @click="open">打开弹窗</button>
 	</view>
 </template>
 
 <script>
 	import discover_ble from "../../js/discover_ble.js";
 	import login from "../../js/login.js";
+	import uniPopup from '@/components/uni-popup/uni-popup.vue';
+	import uniPopupMessage from '@/components/uni-popup/uni-popup-message.vue';
+	import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog.vue';
+	import emailLogin from "../login/login.vue"
 	
 	var loop_id=-1;
 	var count=0;
@@ -64,13 +76,17 @@
 	var device_list_num=0;
 	var ble_inited=0;
 	var del_htd_id='';
-	var waiting_count=0;
+	var waiting_count=0;//find_new_popup;
+	var find_new_device=0;
 	export default {
+		components: {
+		        uniPopup,
+		        uniPopupMessage,
+		        uniPopupDialog ,
+				emailLogin
+		},
 		data() {		
 			return {
-				scope_userInfo:1,
-				find_new_device:0,
-				delete_deivce:0,
 				new_device:[],
 				device_arr:[]
 			}
@@ -88,9 +104,12 @@
 			discover_ble.stop_scan_ble();
 		},
 		methods: {
+
 			loop(){
 				count++;
-				console.log('d1');
+				if(count%20==0){
+					console.log('d1');				
+				}				
 				if(log_check==0)
 				{
 					user_info=login.get_user_info();
@@ -106,16 +125,27 @@
 					}
 					if(user_info.loged==0 )
 					{
+						//#ifdef MP-WEIXIN
 						login.wx_login();
+						//#endif
+
+						//#ifdef APP-PLUS
+						this.$refs.acount_login_popup.open();
+						//#endif
+						//
 						return;
 					}
 
 					if(user_info.registed==0)
 					{
 						console.log('user_info.registed==0');
-						this.scope_userInfo=0;	
+						this.$refs.getUserInfo_popup.open();
 						return;
 					}
+					//#ifdef APP-PLUS
+					this.$refs.acount_login_popup.close();
+					//#endif
+					
 					login.request_binded_device();
 					log_check=1;
 				}	
@@ -133,19 +163,30 @@
 					discover_ble.ble_rescan();
 					login.request_binded_device();
 					console.log(login.get_user_info());
+					if(discover_ble.get_ble_adapter()==-1)
+					{
+						this.$refs.notice_open_ble_popup.open();
+					}
+				}
+				if(count%5==0){
+					if(discover_ble.get_ble_adapter()==-1)
+					{
+						this.$refs.notice_open_ble_popup.open();
+					}
 				}
 				
-				if(count>10 && this.find_new_device == 0 && discover_ble.check_find_device() == 1 )
+				if(count>10 && find_new_device == 0 && discover_ble.check_find_device() == 1 )
 				{					
 					this.new_device=discover_ble.get_scan_device();			
-					this.find_new_device=1;					
+					find_new_device=1;		
+					this.$refs.find_new_popup.open();
 					console.log(1012);					
 				}
 
 				
 			},	
 			getUserInfo(){
-				this.scope_userInfo=1;
+				this.$refs.getUserInfo_popup.close();
 				login.user_regist();
 				
 			},
@@ -160,13 +201,15 @@
 			bind(htd_id){
 				count=1;
 				discover_ble.stop_scan_ble();
-				this.find_new_device=0;
+				find_new_device=0;
+				this.$refs.find_new_popup.close();
 				console.log('bind:'+htd_id);
 				login.bind_device(htd_id);
 				discover_ble.clear_scaned_device();
 			},
 			no_bind(){
-				this.find_new_device=0;
+				find_new_device=0;
+				this.$refs.find_new_popup.close();
 				discover_ble.clear_scaned_device();
 			},
 			t2(){
@@ -179,7 +222,7 @@
 			},
 			long_press(del_id){
 				console.log("longpress");
-				this.delete_deivce=1;
+				this.$refs.delete_device_popup.open();
 				del_htd_id=del_id;
 			},
 			click_device(htd_id,htp_id){
@@ -190,11 +233,17 @@
 				}); 
 			},
 			cancel_delete(){
-				this.delete_deivce=0;
+				this.$refs.delete_device_popup.close();
 			},
 			sure_delete(){
-				this.delete_deivce=0;
+				this.$refs.delete_device_popup.close();
 				login.delete_device(del_htd_id);
+			},
+			open(){
+				this.$refs.acount_login_popup.open();
+			},
+			close_open_ble_notice(){
+				this.$refs.notice_open_ble_popup.close();
 			}
 			
 			
@@ -221,7 +270,6 @@
 		width: 100vw;
 		background-color: #FFFFFF;
 		bottom: 0;
-		position: fixed;
 		display: flex;
 		align-items: center;
 		flex-direction: column;

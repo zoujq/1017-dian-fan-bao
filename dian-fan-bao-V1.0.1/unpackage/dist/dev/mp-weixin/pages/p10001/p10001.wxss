@@ -7,7 +7,8 @@
 .demo3 {
     width: 7rpx;
     height: 7rpx;
-    border-radius: 50%;
+    -webkit-border-radius: 50%;
+            border-radius: 50%;
     background: #D0D0D0;
     position: absolute;
 	animation: demo3 linear 1.2s infinite;
@@ -139,7 +140,8 @@
 	background-color: #FFFFFF;
 	bottom: 33.33rpx;
 	position: fixed;
-	border-radius: 33.33rpx;
+	-webkit-border-radius: 33.33rpx;
+	        border-radius: 33.33rpx;
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: flex;
@@ -366,8 +368,10 @@ picker-view {
 	height: 183.33rpx;
 	background-color: #FFFFFF;
 	margin-top:20.83rpx ;
-	box-shadow: 0 6.25rpx 12.5rpx 0 rgba(0,0,0,0.03);
-	border-radius: 16.67rpx;
+	-webkit-box-shadow: 0 6.25rpx 12.5rpx 0 rgba(0,0,0,0.03);
+	        box-shadow: 0 6.25rpx 12.5rpx 0 rgba(0,0,0,0.03);
+	-webkit-border-radius: 16.67rpx;
+	        border-radius: 16.67rpx;
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: flex;
@@ -459,7 +463,8 @@ picker-view {
 	width: 683.33rpx;
 	background-color: #FFFFFF;
 	margin-top: 16.67rpx;
-	border-radius: 16.67rpx;
+	-webkit-border-radius: 16.67rpx;
+	        border-radius: 16.67rpx;
 	-webkit-box-orient: vertical;
 	-webkit-box-direction: normal;
 	-webkit-flex-direction: column;
@@ -513,8 +518,10 @@ picker-view {
 	-webkit-box-align: center;
 	-webkit-align-items: center;
 	        align-items: center;
-	border-radius: 50%;
-	box-shadow: 0 0.28vw 0.56vw rgba(0,0,0,0.25);
+	-webkit-border-radius: 50%;
+	        border-radius: 50%;
+	-webkit-box-shadow: 0 0.28vw 0.56vw rgba(0,0,0,0.25);
+	        box-shadow: 0 0.28vw 0.56vw rgba(0,0,0,0.25);
 }
 .stop-img image{
 	background-image:url(data:image/png;base64,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);
@@ -576,7 +583,8 @@ picker-view {
 .set-icon{
 	height: 78.65rpx;
 	width: 78.65rpx;
-	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	        border-radius: 50%;
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: flex;

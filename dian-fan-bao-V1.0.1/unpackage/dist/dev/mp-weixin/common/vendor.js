@@ -8,7 +8,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.createApp = createApp;exports.createComponent = createComponent;exports.createPage = createPage;exports.default = void 0;var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(arr, i) {if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;var _arr = [];var _n = true;var _d = false;var _e = undefined;try {for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {_arr.push(_s.value);if (i && _arr.length === i) break;}} catch (err) {_d = true;_e = err;} finally {try {if (!_n && _i["return"] != null) _i["return"]();} finally {if (_d) throw _e;}}return _arr;}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(n);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}
+Object.defineProperty(exports, "__esModule", { value: true });exports.createApp = createApp;exports.createComponent = createComponent;exports.createPage = createPage;exports.default = void 0;var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(arr, i) {if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;var _arr = [];var _n = true;var _d = false;var _e = undefined;try {for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {_arr.push(_s.value);if (i && _arr.length === i) break;}} catch (err) {_d = true;_e = err;} finally {try {if (!_n && _i["return"] != null) _i["return"]();} finally {if (_d) throw _e;}}return _arr;}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}
 
 var _toString = Object.prototype.toString;
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -363,7 +363,144 @@ var baseApi = /*#__PURE__*/Object.freeze({
   upx2px: upx2px,
   addInterceptor: addInterceptor,
   removeInterceptor: removeInterceptor,
-  interceptors: interceptors });
+  interceptors: interceptors });var
+
+
+EventChannel = /*#__PURE__*/function () {
+  function EventChannel(id, events) {var _this = this;_classCallCheck(this, EventChannel);
+    this.id = id;
+    this.listener = {};
+    this.emitCache = {};
+    if (events) {
+      Object.keys(events).forEach(function (name) {
+        _this.on(name, events[name]);
+      });
+    }
+  }_createClass(EventChannel, [{ key: "emit", value: function emit(
+
+    eventName) {for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {args[_key3 - 1] = arguments[_key3];}
+      var fns = this.listener[eventName];
+      if (!fns) {
+        return (this.emitCache[eventName] || (this.emitCache[eventName] = [])).push(args);
+      }
+      fns.forEach(function (opt) {
+        opt.fn.apply(opt.fn, args);
+      });
+      this.listener[eventName] = fns.filter(function (opt) {return opt.type !== 'once';});
+    } }, { key: "on", value: function on(
+
+    eventName, fn) {
+      this._addListener(eventName, 'on', fn);
+      this._clearCache(eventName);
+    } }, { key: "once", value: function once(
+
+    eventName, fn) {
+      this._addListener(eventName, 'once', fn);
+      this._clearCache(eventName);
+    } }, { key: "off", value: function off(
+
+    eventName, fn) {
+      var fns = this.listener[eventName];
+      if (!fns) {
+        return;
+      }
+      if (fn) {
+        for (var i = 0; i < fns.length;) {
+          if (fns[i].fn === fn) {
+            fns.splice(i, 1);
+            i--;
+          }
+          i++;
+        }
+      } else {
+        delete this.listener[eventName];
+      }
+    } }, { key: "_clearCache", value: function _clearCache(
+
+    eventName) {
+      var cacheArgs = this.emitCache[eventName];
+      if (cacheArgs) {
+        for (; cacheArgs.length > 0;) {
+          this.emit.apply(this, [eventName].concat(cacheArgs.shift()));
+        }
+      }
+    } }, { key: "_addListener", value: function _addListener(
+
+    eventName, type, fn) {
+      (this.listener[eventName] || (this.listener[eventName] = [])).push({
+        fn: fn,
+        type: type });
+
+    } }]);return EventChannel;}();
+
+
+var eventChannels = {};
+
+var eventChannelStack = [];
+
+var id = 0;
+
+function initEventChannel(events) {var cache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  id++;
+  var eventChannel = new EventChannel(id, events);
+  if (cache) {
+    eventChannels[id] = eventChannel;
+    eventChannelStack.push(eventChannel);
+  }
+  return eventChannel;
+}
+
+function getEventChannel(id) {
+  if (id) {
+    var eventChannel = eventChannels[id];
+    delete eventChannels[id];
+    return eventChannel;
+  }
+  return eventChannelStack.shift();
+}
+
+var navigateTo = {
+  args: function args(fromArgs, toArgs) {
+    var id = initEventChannel(fromArgs.events).id;
+    if (fromArgs.url) {
+      fromArgs.url = fromArgs.url + (fromArgs.url.indexOf('?') === -1 ? '?' : '&') + '__id__=' + id;
+    }
+  },
+  returnValue: function returnValue(fromRes, toRes) {
+    fromRes.eventChannel = getEventChannel();
+  } };
+
+
+function findExistsPageIndex(url) {
+  var pages = getCurrentPages();
+  var len = pages.length;
+  while (len--) {
+    var page = pages[len];
+    if (page.$page && page.$page.fullPath === url) {
+      return len;
+    }
+  }
+  return -1;
+}
+
+var redirectTo = {
+  name: function name(fromArgs) {
+    if (fromArgs.exists === 'back' && fromArgs.delta) {
+      return 'navigateBack';
+    }
+    return 'redirectTo';
+  },
+  args: function args(fromArgs) {
+    if (fromArgs.exists === 'back' && fromArgs.url) {
+      var existsPageIndex = findExistsPageIndex(fromArgs.url);
+      if (existsPageIndex !== -1) {
+        var delta = getCurrentPages().length - 1 - existsPageIndex;
+        if (delta > 0) {
+          fromArgs.delta = delta;
+        }
+      }
+    }
+  } };
 
 
 var previewImage = {
@@ -412,6 +549,8 @@ function addSafeAreaInsets(result) {
   }
 }
 var protocols = {
+  redirectTo: redirectTo,
+  navigateTo: navigateTo,
   previewImage: previewImage,
   getSystemInfo: {
     returnValue: addSafeAreaInsets },
@@ -499,7 +638,12 @@ function wrapper(methodName, method) {
       if (typeof arg2 !== 'undefined') {
         args.push(arg2);
       }
-      var returnValue = wx[options.name || methodName].apply(wx, args);
+      if (isFn(options.name)) {
+        methodName = options.name(arg1);
+      } else if (isStr(options.name)) {
+        methodName = options.name;
+      }
+      var returnValue = wx[methodName].apply(wx, args);
       if (isSyncApi(methodName)) {// 同步 api
         return processReturnValue(methodName, returnValue, options.returnValue, isContextApi(methodName));
       }
@@ -627,7 +771,7 @@ function initTriggerEvent(mpInstance) {
     }
   }
   var oldTriggerEvent = mpInstance.triggerEvent;
-  mpInstance.triggerEvent = function (event) {for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {args[_key3 - 1] = arguments[_key3];}
+  mpInstance.triggerEvent = function (event) {for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {args[_key4 - 1] = arguments[_key4];}
     return oldTriggerEvent.apply(mpInstance, [customize(event)].concat(args));
   };
 }
@@ -640,7 +784,7 @@ function initHook(name, options) {
     };
   } else {
     options[name] = function () {
-      initTriggerEvent(this);for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {args[_key4] = arguments[_key4];}
+      initTriggerEvent(this);for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {args[_key5] = arguments[_key5];}
       return oldHook.apply(this, args);
     };
   }
@@ -760,7 +904,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1108,7 +1252,7 @@ function getContextVm(vm) {
   return $parent && $parent.$parent;
 }
 
-function handleEvent(event) {var _this = this;
+function handleEvent(event) {var _this2 = this;
   event = wrapper$1(event);
 
   // [['tap',[['handle',[1,2,a]],['handle1',[1,2,a]]]]]
@@ -1139,14 +1283,14 @@ function handleEvent(event) {var _this = this;
       eventsArray.forEach(function (eventArray) {
         var methodName = eventArray[0];
         if (methodName) {
-          var handlerCtx = _this.$vm;
+          var handlerCtx = _this2.$vm;
           if (handlerCtx.$options.generic) {// mp-weixin,mp-toutiao 抽象节点模拟 scoped slots
             handlerCtx = getContextVm(handlerCtx) || handlerCtx;
           }
           if (methodName === '$emit') {
             handlerCtx.$emit.apply(handlerCtx,
             processEventArgs(
-            _this.$vm,
+            _this2.$vm,
             event,
             eventArray[1],
             eventArray[2],
@@ -1166,7 +1310,7 @@ function handleEvent(event) {var _this = this;
             handler.once = true;
           }
           var params = processEventArgs(
-          _this.$vm,
+          _this2.$vm,
           event,
           eventArray[1],
           eventArray[2],
@@ -1360,8 +1504,65 @@ function parseApp(vm) {
 }
 
 function createApp(vm) {
+  _vue.default.prototype.getOpenerEventChannel = function () {
+    if (!this.__eventChannel__) {
+      this.__eventChannel__ = new EventChannel();
+    }
+    return this.__eventChannel__;
+  };
+  var callHook = _vue.default.prototype.__call_hook;
+  _vue.default.prototype.__call_hook = function (hook, args) {
+    if (hook === 'onLoad' && args && args.__id__) {
+      this.__eventChannel__ = getEventChannel(args.__id__);
+      delete args.__id__;
+    }
+    return callHook.call(this, hook, args);
+  };
   App(parseApp(vm));
   return vm;
+}
+
+var encodeReserveRE = /[!'()*]/g;
+var encodeReserveReplacer = function encodeReserveReplacer(c) {return '%' + c.charCodeAt(0).toString(16);};
+var commaRE = /%2C/g;
+
+// fixed encodeURIComponent which is more conformant to RFC3986:
+// - escapes [!'()*]
+// - preserve commas
+var encode = function encode(str) {return encodeURIComponent(str).
+  replace(encodeReserveRE, encodeReserveReplacer).
+  replace(commaRE, ',');};
+
+function stringifyQuery(obj) {var encodeStr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : encode;
+  var res = obj ? Object.keys(obj).map(function (key) {
+    var val = obj[key];
+
+    if (val === undefined) {
+      return '';
+    }
+
+    if (val === null) {
+      return encodeStr(key);
+    }
+
+    if (Array.isArray(val)) {
+      var result = [];
+      val.forEach(function (val2) {
+        if (val2 === undefined) {
+          return;
+        }
+        if (val2 === null) {
+          result.push(encodeStr(key));
+        } else {
+          result.push(encodeStr(key) + '=' + encodeStr(val2));
+        }
+      });
+      return result.join('&');
+    }
+
+    return encodeStr(key) + '=' + encodeStr(val);
+  }).filter(function (x) {return x.length > 0;}).join('&') : null;
+  return res ? "?".concat(res) : '';
 }
 
 function parseBaseComponent(vueComponentOptions)
@@ -1486,9 +1687,15 @@ function parseBasePage(vuePageOptions, _ref6)
 
   initHooks(pageOptions.methods, hooks$1, vuePageOptions);
 
-  pageOptions.methods.onLoad = function (args) {
-    this.$vm.$mp.query = args; // 兼容 mpvue
-    this.$vm.__call_hook('onLoad', args);
+  pageOptions.methods.onLoad = function (query) {
+    this.options = query;
+    var copyQuery = Object.assign({}, query);
+    delete copyQuery.__id__;
+    this.$page = {
+      fullPath: '/' + (this.route || this.is) + stringifyQuery(copyQuery) };
+
+    this.$vm.$mp.query = query; // 兼容 mpvue
+    this.$vm.__call_hook('onLoad', query);
   };
 
   return pageOptions;
@@ -1736,9 +1943,7 @@ function normalizeComponent (
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
-var _login = _interopRequireDefault(__webpack_require__(/*! ./login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _default =
-
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _login = _interopRequireDefault(__webpack_require__(/*! ./login.js */ 18));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _default =
 
 {
   start_scan_ble: start_scan_ble,
@@ -1747,12 +1952,19 @@ var _login = _interopRequireDefault(__webpack_require__(/*! ./login.js */ 18));f
   ble_rescan: ble_rescan,
   get_scan_device: get_scan_device,
   check_find_device: check_find_device,
-  stop_scan_ble: stop_scan_ble };exports.default = _default;
+  stop_scan_ble: stop_scan_ble,
+  get_ble_adapter: get_ble_adapter };exports.default = _default;
 
 var find_device = 0;
 var scan_device = [];
 var wait_http = 0;
 var count = 0;
+var ble_adapter = 0;
+function get_ble_adapter() {
+  var t = ble_adapter;
+  ble_adapter = 0;
+  return t;
+}
 function start_scan_ble()
 {
   wait_http = 0;
@@ -1762,6 +1974,10 @@ function start_scan_ble()
       console.log(res);
       uni.openBluetoothAdapter({
         complete: function complete(res) {
+          if (res.errCode == 10001)
+          {
+            ble_adapter = -1;
+          }
           console.log(res);
           uni.startBluetoothDevicesDiscovery({
             allowDuplicatesKey: true,
@@ -1777,7 +1993,7 @@ function start_scan_ble()
   uni.onBluetoothDeviceFound(function (res) {
     var devices = res.devices;
     var d_hex = ab2hex(devices[0].advertisData);
-    if (count++ > 30)
+    if (count++ > 300)
     {
       console.log('fd');
       count = 0;
@@ -1824,16 +2040,20 @@ function stop_scan_ble()
 function ble_rescan()
 {
   wait_http = 0;
-  uni.stopBluetoothDevicesDiscovery({
-    success: function success(res) {
-      console.log(res);
+  uni.closeBluetoothAdapter({
+    complete: function complete(res) {
+      // console.log(res)
       uni.openBluetoothAdapter({
-        success: function success(res) {
-          console.log(res);
+        complete: function complete(res) {
+          if (res.errCode == 10001)
+          {
+            ble_adapter = -1;
+          }
+          // console.log(res)
           uni.startBluetoothDevicesDiscovery({
             allowDuplicatesKey: true,
             success: function success(res) {
-              console.log(res);
+              // console.log(res)
             } });
 
         } });
@@ -1943,7 +2163,9 @@ function sao_yi_sao() {
   request_binded_device: request_binded_device,
   bind_device: bind_device,
   delete_device: delete_device,
-  set_connect_htd_id: set_connect_htd_id };exports.default = _default;
+  set_connect_htd_id: set_connect_htd_id,
+  send_ver_email: send_ver_email,
+  get_user_info_by_email: get_user_info_by_email };exports.default = _default;
 
 
 var user_info = {
@@ -2056,7 +2278,6 @@ function user_regist() {
                     encryptedData: res.encryptedData,
                     iv: res.iv },
 
-
                   success: function success(res) {
                     //console.log(res)
                     if (res.data.errCode == 0)
@@ -2165,6 +2386,44 @@ function delete_device(htd_id)
     success: function success(res) {
       console.log(res);
       request_binded_device();
+    } });
+
+}
+function send_ver_email(to_addr)
+{
+  uni.request({
+    url: 'https://server.huotiantech.com/auth/email/send_email_code.php',
+    data: {
+      to: to_addr },
+
+    success: function success(res) {
+      console.log(res);
+
+    } });
+
+}
+
+function get_user_info_by_email(email, code, cb)
+{
+  uni.request({
+    url: 'https://server.huotiantech.com/auth/email/get_user_info_by_email.php',
+    data: {
+      email: email,
+      code: code },
+
+    complete: function complete(res) {
+      //console.log(res);
+      cb(res);
+      if (res.data.errCode == 0)
+      {
+        user_info.called = 1;
+        user_info.htu_id = res.data.htu_id;
+        user_info.ht_token = res.data.ht_token;
+        user_info.loged = 1;
+        user_info.registed = 1;
+        set_storage_user_info();
+      }
+
     } });
 
 }
@@ -7696,7 +7955,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -7717,14 +7976,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7809,7 +8068,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -8247,7 +8506,18 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 34:
+/***/ 4:
+/*!*****************************************************************************!*\
+  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/pages.json ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ 41:
 /*!**********************************************************************************************!*\
   !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/static/language/language.js ***!
   \**********************************************************************************************/
@@ -8338,7 +8608,7 @@ var en = {
 
 /***/ }),
 
-/***/ 35:
+/***/ 42:
 /*!************************************************************************************!*\
   !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/connect_ble.js ***!
   \************************************************************************************/
@@ -8356,7 +8626,9 @@ var en = {
   set_on_received_data_callback: set_on_received_data_callback };exports.default = _default;
 
 
+var is_connect_ble = 0;
 var find_device = 0;
+var connecting = 0;
 var scan_device = [];
 var wait_http = 0;
 
@@ -8373,10 +8645,12 @@ var WRITE_CHARA_UUID = '0000FFE2-0000-1000-8000-00805F9B34FB';
 
 
 function start_ble() {
+  is_connect_ble = 1;
   console.log('start_ble()');
   start_scan_ble();
 }
 function stop_ble() {
+  is_connect_ble = 0;
   close_ble();
   stop_scan_ble();
 }
@@ -8411,9 +8685,10 @@ function get_cup_state() {
 }
 function close_ble()
 {
+  console.log('close_ble');
   uni.closeBLEConnection({
     deviceId: ble_deviceId,
-    success: function success(res) {
+    complete: function complete(res) {
       console.log(res);
     } });
 
@@ -8424,13 +8699,14 @@ function start_scan_ble()
   ble_state = 1;
   uni.closeBluetoothAdapter({
     complete: function complete(res) {
-      console.log(res);
+      //console.log(res)
       uni.openBluetoothAdapter({
         complete: function complete(res) {
-          console.log(res);
+          // console.log(res)
           uni.startBluetoothDevicesDiscovery({
+            // allowDuplicatesKey:true,
             success: function success(res) {
-              console.log(res);
+              // console.log(res)
             } });
 
         } });
@@ -8439,64 +8715,68 @@ function start_scan_ble()
 
 
   uni.onBluetoothDeviceFound(function (res) {
+    if (is_connect_ble == 0)
+    {
+      return;
+    }
     var devices = res.devices;
     var d_hex = ab2hex(devices[0].advertisData);
-    console.log(res);
+    console.log('kkkkk');
+    console.log(d_hex);
     if (d_hex.slice(4, 8) == '88a0')
     {
       var connect_htd_id = _login.default.get_user_info().connect_htd_id;
-      console.log("connect_htd_id=".concat(connect_htd_id));
-      if (d_hex.slice(8, 20) == connect_htd_id)
+      if (d_hex.slice(8, 20) == connect_htd_id && connecting == 0)
       {
+        connecting = 1;
         console.log('connect_htd_id find:' + connect_htd_id);
         ble_deviceId = devices[0].deviceId;
         console.log('ble_deviceId:' + ble_deviceId);
         uni.createBLEConnection({
           deviceId: ble_deviceId,
-          fail: function fail(res) {
-            console.log(res);
-          },
-          success: function success(res) {
+          complete: function complete(res) {
+            connecting = 0;
             console.log(res);
             stop_scan_ble();
-            uni.getBLEDeviceServices({
-              // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
-              deviceId: ble_deviceId,
-              complete: function complete(res) {
-                console.log('device services:', res.services);
+            setTimeout(function () {
+              uni.getBLEDeviceServices({
+                // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+                deviceId: ble_deviceId,
+                complete: function complete(res) {
+                  connecting = 0;
+                  console.log('device services:', res);
+                  uni.getBLEDeviceCharacteristics({
+                    // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+                    deviceId: ble_deviceId,
+                    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+                    serviceId: SERVICE_UUID,
+                    complete: function complete(res) {
+                      connecting = 0;
+                      console.log('device getBLEDeviceCharacteristics:', res.characteristics);
+                      uni.notifyBLECharacteristicValueChange({
+                        state: true, // 启用 notify 功能
+                        // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+                        deviceId: ble_deviceId,
+                        // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+                        serviceId: SERVICE_UUID,
+                        // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+                        characteristicId: NOTIFY_CHARA_UUID,
+                        complete: function complete(res) {
+                          connecting = 0;
+                          console.log('notifyBLECharacteristicValueChange success', res.errMsg);
+                          if (res.errMsg == "notifyBLECharacteristicValueChange:ok")
+                          {
+                            ble_state = 2;
+                          }
 
-                uni.getBLEDeviceCharacteristics({
-                  // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
-                  deviceId: ble_deviceId,
-                  // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
-                  serviceId: SERVICE_UUID,
-                  fail: function fail(res) {
-                    console.log(res);
-                  },
-                  complete: function complete(res) {
-                    console.log('device getBLEDeviceCharacteristics:', res.characteristics);
-                    uni.notifyBLECharacteristicValueChange({
-                      state: true, // 启用 notify 功能
-                      // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
-                      deviceId: ble_deviceId,
-                      // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
-                      serviceId: SERVICE_UUID,
-                      // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
-                      characteristicId: NOTIFY_CHARA_UUID,
-                      fail: function fail(res) {
-                        console.log(res);
-                      },
-                      success: function success(res) {
-                        console.log('notifyBLECharacteristicValueChange success', res.errMsg);
-                        ble_state = 2;
+                        } });
 
-                      } });
-
-                  } });
+                    } });
 
 
+                } });
 
-              } });
+            }, 3000);
 
           } });
 
@@ -8505,7 +8785,7 @@ function start_scan_ble()
   });
   uni.onBLEConnectionStateChange(function (res) {
     // 该方法回调中可以用于处理连接意外断开等异常情况
-    console.log("device ".concat(res.deviceId, " state has changed, connected: ").concat(res.connected));
+    // console.log(`device ${res.deviceId} state has changed, connected: ${res.connected}`)
     if (res.connected == false && ble_state == 2)
     {
       ble_state = 0;
@@ -8538,7 +8818,7 @@ function stop_scan_ble()
 {
   uni.stopBluetoothDevicesDiscovery({
     success: function success(res) {
-      console.log(res);
+      // console.log(res) 
     } });
 
 }
@@ -8546,14 +8826,14 @@ function ble_rescan()
 {
   uni.stopBluetoothDevicesDiscovery({
     success: function success(res) {
-      console.log(res);
+      // console.log(res)
       uni.openBluetoothAdapter({
         success: function success(res) {
-          console.log(res);
+          // console.log(res)
           uni.startBluetoothDevicesDiscovery({
-            allowDuplicatesKey: true,
+            // allowDuplicatesKey:true,
             success: function success(res) {
-              console.log(res);
+              // console.log(res) 
             } });
 
         } });
@@ -8563,7 +8843,7 @@ function ble_rescan()
 }
 
 
-// ArrayBuffer转16进度字符串示例
+// ArrayBuffer转16进度字符串示例 
 function ab2hex(buffer) {
   var hexArr = Array.prototype.map.call(
   new Uint8Array(buffer),
@@ -8594,18 +8874,7 @@ function hex2int(hex) {
 
 /***/ }),
 
-/***/ 4:
-/*!*****************************************************************************!*\
-  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/pages.json ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
-
-/***/ 44:
+/***/ 51:
 /*!*******************************************************************************!*\
   !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/js/hw_ble.js ***!
   \*******************************************************************************/
@@ -8613,6 +8882,72 @@ function hex2int(hex) {
 /***/ (function(module, exports) {
 
 
+
+/***/ }),
+
+/***/ 85:
+/*!************************************************************************************************!*\
+  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/components/uni-popup/popup.js ***!
+  \************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _message = _interopRequireDefault(__webpack_require__(/*! ./message.js */ 86));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+// 定义 type 类型:弹出类型：top/bottom/center
+var config = {
+  // 顶部弹出
+  top: 'top',
+  // 底部弹出
+  bottom: 'bottom',
+  // 居中弹出
+  center: 'center',
+  // 消息提示
+  message: 'top',
+  // 对话框
+  dialog: 'center',
+  // 分享
+  share: 'bottom' };var _default =
+
+
+{
+  data: function data() {
+    return {
+      config: config };
+
+  },
+  mixins: [_message.default] };exports.default = _default;
+
+/***/ }),
+
+/***/ 86:
+/*!**************************************************************************************************!*\
+  !*** D:/1005_项目/1017-智能电饭煲/软硬件SVN/APP/trunk/dian-fan-bao-V1.0.1/components/uni-popup/message.js ***!
+  \**************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  created: function created() {
+    if (this.type === 'message') {
+      // 不显示遮罩
+      this.maskShow = false;
+      // 获取子组件对象
+      this.childrenMsg = null;
+    }
+  },
+  methods: {
+    customOpen: function customOpen() {
+      if (this.childrenMsg) {
+        this.childrenMsg.open();
+      }
+    },
+    customClose: function customClose() {
+      if (this.childrenMsg) {
+        this.childrenMsg.close();
+      }
+    } } };exports.default = _default;
 
 /***/ })
 

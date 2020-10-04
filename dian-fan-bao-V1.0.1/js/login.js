@@ -9,7 +9,9 @@ export default {
 	request_binded_device,
 	bind_device,
 	delete_device,
-	set_connect_htd_id
+	set_connect_htd_id,
+	send_ver_email,
+	get_user_info_by_email
 
 }
 var user_info={
@@ -120,8 +122,7 @@ function user_regist(){
 						sessionKey: user_info.session_key,
 						openid:user_info.openid,
 						encryptedData:res.encryptedData,
-						iv:res.iv,
-						
+						iv:res.iv,						
 				    },
 					success (res) {
 						//console.log(res)
@@ -234,5 +235,41 @@ function delete_device(htd_id)
 		}
 	})
 }
+function send_ver_email(to_addr)
+{
+	uni.request({
+	  url: 'https://server.huotiantech.com/auth/email/send_email_code.php',
+	  data: {
+		to:to_addr
+	  },
+		success (res) {
+			console.log(res);
+			
+		}
+	})
+}
 
-
+function get_user_info_by_email(email,code,cb)
+{
+	uni.request({
+	  url: 'https://server.huotiantech.com/auth/email/get_user_info_by_email.php',
+	  data: {
+		email:email,
+		code:code
+	  },
+		complete (res) {			
+			//console.log(res);
+			cb(res);
+			if(res.data.errCode==0)
+			{
+				user_info.called=1;
+				user_info.htu_id=res.data.htu_id;
+				user_info.ht_token=res.data.ht_token;
+				user_info.loged=1;
+				user_info.registed=1;
+				set_storage_user_info();
+			}
+			
+		}
+	})
+}
